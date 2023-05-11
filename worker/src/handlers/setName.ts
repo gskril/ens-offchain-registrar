@@ -1,10 +1,11 @@
-import zod from 'zod'
 import { IRequest } from 'itty-router'
 import { verifyMessage } from 'ethers/lib/utils'
+import zod from 'zod'
+
 import { get } from './functions/get'
 import { set } from './functions/set'
 
-export async function setName(request: IRequest) {
+export async function setName(request: IRequest): Promise<Response> {
   const schema = zod.object({
     name: zod.string().regex(/^[a-z0-9-.]+$/),
     records: zod.object({
@@ -20,7 +21,7 @@ export async function setName(request: IRequest) {
 
   const safeParse = schema.safeParse(await request.json())
   if (!safeParse.success) {
-    const response = { error: safeParse.error }
+    const response = { success: false, error: safeParse.error }
     return new Response(JSON.stringify(response), { status: 400 })
   }
 
@@ -33,7 +34,7 @@ export async function setName(request: IRequest) {
       throw new Error('Invalid signer')
     }
   } catch (err) {
-    const response = { error: err }
+    const response = { success: false, error: err }
     return new Response(JSON.stringify(response), { status: 401 })
   }
 
@@ -44,10 +45,16 @@ export async function setName(request: IRequest) {
     existingName.addresses['60'].toLowerCase() !==
       records.addresses['60'].toLowerCase()
   ) {
-    const response = { error: 'Name already taken' }
+    const response = { success: false, error: 'Name already taken' }
     return new Response(JSON.stringify(response), { status: 409 })
   }
 
-  const setResponse = await set(name, records)
-  return setResponse
+  try {
+    await set(name, records)
+    const response = { success: true }
+    return new Response(JSON.stringify(response), { status: 201 })
+  } catch (err) {
+    const response = { success: false, error: err }
+    return new Response(JSON.stringify(response), { status: 500 })
+  }
 }

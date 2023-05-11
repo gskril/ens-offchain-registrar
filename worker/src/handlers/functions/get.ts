@@ -1,4 +1,4 @@
-import { NameData } from '../models/data'
+import { NameData } from '../../models/data'
 declare const RECORDS: KVNamespace
 
 export async function get(name: string): Promise<NameData | null> {
