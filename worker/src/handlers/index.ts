@@ -1,2 +1,3 @@
-export * from './get'
-export * from './set'
+export * from './getKeys'
+export * from './getName'
+export * from './setName'
