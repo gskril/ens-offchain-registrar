@@ -10,6 +10,7 @@ import { useFetch } from './hooks/useFetch'
 function App() {
   const { address } = useAccount()
   const [name, setName] = useState<string | null>(null)
+  const [description, setDescription] = useState<string | null>(null)
   const debouncedName = useDebounce(name, 500)
 
   const regex = new RegExp('^[a-z0-9-]+$')
@@ -21,6 +22,7 @@ function App() {
     data && 'https://ens-gateway.gregskril.workers.dev/set',
     {
       method: 'POST',
+      mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -30,15 +32,17 @@ function App() {
           addresses: {
             '60': address,
           },
+          text: {
+            description: description,
+          },
         },
-        signature: '',
+        signature: {
+          hash: data,
+          message: variables?.message,
+        },
       }),
     }
   )
-
-  {
-    gatewayData && console.log(gatewayData)
-  }
 
   return (
     <main>
@@ -55,24 +59,33 @@ function App() {
         >
           <input
             type="text"
+            required
             disabled={!!data}
+            placeholder="name"
             onChange={(e) => setName(e.target.value)}
           />
-          <button type="submit" disabled={!enabled}>
+
+          <input
+            type="text"
+            disabled={!!data}
+            placeholder="description"
+            onChange={(e) => setDescription(e.target.value)}
+          />
+
+          <button type="submit" disabled={!enabled || !!data}>
             Sign Message
           </button>
 
-          {gatewayError ? (
-            <p>Error saving your data to the gateway</p>
-          ) : gatewayData ? (
+          {gatewayData || gatewayError ? (
             <p>
-              Got the gateway data! Go to{' '}
+              Go to{' '}
               <a
                 href={`https://app.ens.domains/${debouncedName}.conference.eth`}
+                target="_blank"
               >
                 app.ens.domains/{debouncedName}.conference.eth
               </a>{' '}
-              on Goerli to see if it worked
+              on Goerli to see if it worked. It might take a minute.
             </p>
           ) : !debouncedName ? (
             <p>Enter a name to use as a subname of conference.eth on Goerli</p>
@@ -82,7 +95,7 @@ function App() {
               Goerli
             </p>
           ) : (
-            <p>That name doesn't work</p>
+            <p>Pick a name with just letters and numbers</p>
           )}
         </form>
       </div>

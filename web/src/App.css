@@ -25,3 +25,8 @@ form {
 button:disabled {
   cursor: not-allowed;
 }
+
+a {
+  color: #6ba6ff;
+  text-decoration: underline;
+}
