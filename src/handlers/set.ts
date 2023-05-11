@@ -5,7 +5,11 @@ export async function set(name: string, records: NameData): Promise<Response> {
   const value = JSON.stringify(records)
 
   try {
-    await RECORDS.put(name, value)
+    await RECORDS.put(name, value, {
+      metadata: {
+        updated_at: new Date().toISOString(),
+      },
+    })
     const response = new Response(`Successfully set ${name} to ${value}`, {
       status: 200,
     })
