@@ -1,0 +1,25 @@
+{
+  "name": "name",
+  "version": "1.0.0",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf ./dist && rm -rf ./node_modules",
+    "dev": "tsc && node ./dist/index.js",
+    "start": "tsc && node ./dist/index.js"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20230307.0",
+    "@types/node": "^18.15.3",
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.5",
+    "wrangler": "2.12.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "ethers": "5.7.2",
+    "itty-router": "^3.0.11",
+    "zod": "^3.21.4"
+  }
+}
