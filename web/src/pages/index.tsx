@@ -1,3 +1,4 @@
+import { Button, Card, Helper, Input } from '@ensdomains/thorin'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { useState } from 'react'
 import { useAccount, useSignMessage } from 'wagmi'
@@ -16,7 +17,7 @@ export default function App() {
   const regex = new RegExp('^[a-z0-9-]+$')
   const enabled = !!debouncedName && regex.test(debouncedName)
 
-  const { data, signMessage, variables } = useSignMessage()
+  const { data, isLoading, signMessage, variables } = useSignMessage()
 
   const requestBody: WorkerRequest = {
     name: `${debouncedName}.conference.eth`,
@@ -46,62 +47,71 @@ export default function App() {
   )
 
   return (
-    <main>
-      <div className="container">
-        <ConnectButton showBalance={false} />
+    <Card style={{ width: '100%', alignItems: 'center', gap: '1.5rem' }}>
+      <ConnectButton showBalance={false} />
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault()
-            signMessage({
-              message: `Register ${debouncedName}.conference.eth on Goerli`,
-            })
-          }}
-        >
-          <input
-            type="text"
-            required
-            disabled={!!data}
-            placeholder="name"
-            onChange={(e) => setName(e.target.value)}
-          />
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          signMessage({
+            message: `Register ${debouncedName}.conference.eth on Goerli`,
+          })
+        }}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          gap: '1rem',
+        }}
+      >
+        <Input
+          type="text"
+          label="Name"
+          suffix=".conference.eth"
+          placeholder="ethny"
+          required
+          disabled={!!data}
+          onChange={(e) => setName(e.target.value)}
+        />
 
-          <input
-            type="text"
-            disabled={!!data}
-            placeholder="description"
-            onChange={(e) => setDescription(e.target.value)}
-          />
+        <Input
+          type="text"
+          label="Description"
+          placeholder="My cool event"
+          disabled={!!data}
+          onChange={(e) => setDescription(e.target.value)}
+        />
 
-          <button type="submit" disabled={!enabled || !!data}>
-            Sign Message
-          </button>
+        <Button type="submit" disabled={!enabled || !!data} loading={isLoading}>
+          Register on Goerli
+        </Button>
+      </form>
 
-          {gatewayError ? (
-            <p>Something went wrong :/</p>
-          ) : gatewayData ? (
-            <p>
-              Visit{' '}
-              <a
-                href={`https://app.ens.domains/${debouncedName}.conference.eth`}
-                target="_blank"
-              >
-                app.ens.domains/{debouncedName}.conference.eth
-              </a>{' '}
-              on Goerli to see your name! It might take a minute.
-            </p>
-          ) : !debouncedName ? (
-            <p>Enter a name to use as a subname of conference.eth on Goerli</p>
-          ) : enabled ? (
-            <p>
-              Sign a message to register {debouncedName}.conference.eth on
-              Goerli
-            </p>
-          ) : (
-            <p>Pick a name with just letters and numbers</p>
-          )}
-        </form>
-      </div>
-    </main>
+      {gatewayError ? (
+        <Helper type="error">
+          {gatewayError.message === 'Conflict'
+            ? 'Somebody already registered this name'
+            : 'Something went wrong'}
+        </Helper>
+      ) : gatewayData ? (
+        <Helper>
+          <p>
+            Success! Visis the{' '}
+            <a
+              href={`https://app.ens.domains/${debouncedName}.conference.eth`}
+              target="_blank"
+              style={{
+                fontWeight: '500',
+                color: '#3888ff',
+                textDecoration: 'underline',
+              }}
+            >
+              ENS Manager
+            </a>{' '}
+            on Goerli to see your name.
+          </p>
+        </Helper>
+      ) : null}
+    </Card>
   )
 }

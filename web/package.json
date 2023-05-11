@@ -12,13 +12,15 @@
     "prettier:fix": "prettier --write src/**/*"
   },
   "dependencies": {
+    "@ensdomains/thorin": "^0.6.39",
     "@rainbow-me/rainbowkit": "^1.0.0",
     "next": "13.4.1",
     "next-plausible": "^3.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-is": "^18.2.0",
-    "styled-components": "^5.3.10",
+    "react-transition-state": "^2.1.0",
+    "styled-components": "^6.0.0-rc.1",
     "viem": "^0.3.19",
     "wagmi": "^1.0.1",
     "zod": "^3.21.4"
