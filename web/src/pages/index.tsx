@@ -1,16 +1,16 @@
-import './App.css'
-
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-import { useAccount, useSignMessage } from 'wagmi'
 import { useState } from 'react'
+import { useAccount, useSignMessage } from 'wagmi'
 
-import useDebounce from './hooks/useDebounce'
-import { useFetch } from './hooks/useFetch'
+import { WorkerRequest } from '@/types'
 
-function App() {
+import useDebounce from '../hooks/useDebounce'
+import { useFetch } from '../hooks/useFetch'
+
+export default function App() {
   const { address } = useAccount()
-  const [name, setName] = useState<string | null>(null)
-  const [description, setDescription] = useState<string | null>(null)
+  const [name, setName] = useState<string | undefined>(undefined)
+  const [description, setDescription] = useState<string | undefined>(undefined)
   const debouncedName = useDebounce(name, 500)
 
   const regex = new RegExp('^[a-z0-9-]+$')
@@ -18,29 +18,30 @@ function App() {
 
   const { data, signMessage, variables } = useSignMessage()
 
+  const requestBody: WorkerRequest = {
+    name: `${debouncedName}.conference.eth`,
+    records: {
+      addresses: {
+        60: address,
+      },
+      text: {
+        description: description,
+      },
+    },
+    signature: {
+      hash: data,
+      message: variables?.message,
+    },
+  }
+
   const { data: gatewayData, error: gatewayError } = useFetch(
-    data && 'https://ens-gateway.gregskril.workers.dev/set',
+    data && '/api/register',
     {
       method: 'POST',
-      mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        name: `${debouncedName}.conference.eth`,
-        records: {
-          addresses: {
-            '60': address,
-          },
-          text: {
-            description: description,
-          },
-        },
-        signature: {
-          hash: data,
-          message: variables?.message,
-        },
-      }),
+      body: JSON.stringify(requestBody),
     }
   )
 
@@ -76,16 +77,18 @@ function App() {
             Sign Message
           </button>
 
-          {gatewayData || gatewayError ? (
+          {gatewayError ? (
+            <p>Something went wrong :/</p>
+          ) : gatewayData ? (
             <p>
-              Go to{' '}
+              Visit{' '}
               <a
                 href={`https://app.ens.domains/${debouncedName}.conference.eth`}
                 target="_blank"
               >
                 app.ens.domains/{debouncedName}.conference.eth
               </a>{' '}
-              on Goerli to see if it worked. It might take a minute.
+              on Goerli to see your name! It might take a minute.
             </p>
           ) : !debouncedName ? (
             <p>Enter a name to use as a subname of conference.eth on Goerli</p>
@@ -102,5 +105,3 @@ function App() {
     </main>
   )
 }
-
-export default App

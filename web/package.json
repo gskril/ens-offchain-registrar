@@ -1,31 +1,39 @@
 {
-  "name": "web",
+  "name": "web3-starter",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "clean": "rm -rf node_modules .next",
+    "prettier:check": "prettier --check src/**/*",
+    "prettier:fix": "prettier --write src/**/*"
   },
   "dependencies": {
-    "@rainbow-me/rainbowkit": "^1",
+    "@rainbow-me/rainbowkit": "^1.0.0",
+    "next": "13.4.1",
+    "next-plausible": "^3.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "viem": "^0.3.20",
-    "wagmi": "^1"
+    "react-is": "^18.2.0",
+    "styled-components": "^5.3.10",
+    "viem": "^0.3.19",
+    "wagmi": "^1.0.1",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.11",
-    "@typescript-eslint/eslint-plugin": "^5.57.1",
-    "@typescript-eslint/parser": "^5.57.1",
-    "@vitejs/plugin-react-swc": "^3.0.0",
-    "eslint": "^8.38.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.3.4",
-    "typescript": "^5.0.2",
-    "vite": "^4.3.2"
+    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
+    "@types/node": "^20.1.1",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.4",
+    "@types/styled-components": "^5.1.26",
+    "eslint": "^8.40.0",
+    "eslint-config-next": "^13.4.1",
+    "eslint-config-prettier": "^8.8.0",
+    "prettier": "^2.8.8",
+    "sass": "^1.62.1",
+    "typescript": "^5.0.4"
   }
 }
