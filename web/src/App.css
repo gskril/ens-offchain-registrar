@@ -1,0 +1,27 @@
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem;
+  display: flex;
+  max-width: 50rem;
+  align-items: center;
+  flex-direction: column;
+}
+
+form {
+  gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
