@@ -1,8 +1,9 @@
-import { Button, Card, Helper, Input } from '@ensdomains/thorin'
+import { Button, Card, Input } from '@ensdomains/thorin'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { useState } from 'react'
 import { useAccount, useSignMessage } from 'wagmi'
 
+import { Helper } from '@/components/Helper'
 import { WorkerRequest } from '@/types'
 
 import useDebounce from '../hooks/useDebounce'
@@ -70,7 +71,7 @@ export default function App() {
           suffix=".conference.eth"
           placeholder="ethny"
           required
-          disabled={!!data}
+          disabled={!!data || !address}
           onChange={(e) => setName(e.target.value)}
         />
 
@@ -78,7 +79,7 @@ export default function App() {
           type="text"
           label="Description"
           placeholder="My cool event"
-          disabled={!!data}
+          disabled={!!data || !address}
           onChange={(e) => setDescription(e.target.value)}
         />
 
@@ -94,9 +95,9 @@ export default function App() {
             : 'Something went wrong'}
         </Helper>
       ) : gatewayData ? (
-        <Helper>
+        <Helper success>
           <p>
-            Success! Visis the{' '}
+            Success! Visit the{' '}
             <a
               href={`https://app.ens.domains/${debouncedName}.conference.eth`}
               target="_blank"
