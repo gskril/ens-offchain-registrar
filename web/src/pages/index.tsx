@@ -91,7 +91,7 @@ export default function App() {
       {gatewayError ? (
         <Helper type="error">
           {gatewayError.message === 'Conflict'
-            ? 'Somebody already registered this name'
+            ? 'Somebody already registered that name'
             : 'Something went wrong'}
         </Helper>
       ) : gatewayData ? (
@@ -112,6 +112,8 @@ export default function App() {
             on Goerli to see your name.
           </p>
         </Helper>
+      ) : !!debouncedName && !enabled ? (
+        <Helper type="error">Name must be lowercase alphanumeric</Helper>
       ) : null}
     </Card>
   )
