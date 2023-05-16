@@ -17,6 +17,7 @@ export async function setName(request: IRequest): Promise<Response> {
       hash: zod.string(),
       message: zod.string(),
     }),
+    isTemporary: zod.boolean().optional(),
   })
 
   const safeParse = schema.safeParse(await request.json())
@@ -25,7 +26,7 @@ export async function setName(request: IRequest): Promise<Response> {
     return new Response(JSON.stringify(response), { status: 400 })
   }
 
-  const { name, records, signature } = safeParse.data
+  const { name, records, signature, isTemporary } = safeParse.data
 
   // validate signature
   try {
@@ -50,7 +51,7 @@ export async function setName(request: IRequest): Promise<Response> {
   }
 
   try {
-    await set(name, records)
+    await set(name, records, isTemporary)
     const response = { success: true }
     return new Response(JSON.stringify(response), { status: 201 })
   } catch (err) {

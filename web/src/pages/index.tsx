@@ -34,6 +34,7 @@ export default function App() {
       hash: data,
       message: variables?.message,
     },
+    isTemporary: true,
   }
 
   const { data: gatewayData, error: gatewayError } = useFetch(
@@ -109,7 +110,7 @@ export default function App() {
             >
               ENS Manager
             </a>{' '}
-            to see your name.
+            to see your name. It will stop working in 24 hours.
           </p>
         </Helper>
       ) : !!debouncedName && !enabled ? (

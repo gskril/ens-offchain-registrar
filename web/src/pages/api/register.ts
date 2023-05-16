@@ -15,6 +15,7 @@ const schema = zod.object({
     hash: zod.string(),
     message: zod.string(),
   }),
+  isTemporary: zod.boolean().optional(),
 })
 
 export default async function handler(
