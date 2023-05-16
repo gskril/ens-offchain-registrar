@@ -21,7 +21,7 @@ export default function App() {
   const { data, isLoading, signMessage, variables } = useSignMessage()
 
   const requestBody: WorkerRequest = {
-    name: `${debouncedName}.conference.eth`,
+    name: `${debouncedName}.offchaindemo.eth`,
     records: {
       addresses: {
         60: address,
@@ -55,7 +55,7 @@ export default function App() {
         onSubmit={(e) => {
           e.preventDefault()
           signMessage({
-            message: `Register ${debouncedName}.conference.eth on Goerli`,
+            message: `Register ${debouncedName}.offchaindemo.eth`,
           })
         }}
         style={{
@@ -68,7 +68,7 @@ export default function App() {
         <Input
           type="text"
           label="Name"
-          suffix=".conference.eth"
+          suffix=".offchaindemo.eth"
           placeholder="ethny"
           required
           disabled={!!data || !address}
@@ -84,7 +84,7 @@ export default function App() {
         />
 
         <Button type="submit" disabled={!enabled || !!data} loading={isLoading}>
-          Register on Goerli
+          Register
         </Button>
       </form>
 
@@ -99,7 +99,7 @@ export default function App() {
           <p>
             Success! Visit the{' '}
             <a
-              href={`https://app.ens.domains/${debouncedName}.conference.eth`}
+              href={`https://app.ens.domains/${debouncedName}.offchaindemo.eth`}
               target="_blank"
               style={{
                 fontWeight: '500',
@@ -109,7 +109,7 @@ export default function App() {
             >
               ENS Manager
             </a>{' '}
-            on Goerli to see your name.
+            to see your name.
           </p>
         </Helper>
       ) : !!debouncedName && !enabled ? (
