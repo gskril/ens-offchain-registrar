@@ -1,6 +1,6 @@
 import { Button, Card, Input } from '@ensdomains/thorin'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAccount, useSignMessage } from 'wagmi'
 
 import { Helper } from '@/components/Helper'
@@ -14,6 +14,8 @@ export default function App() {
   const [name, setName] = useState<string | undefined>(undefined)
   const [description, setDescription] = useState<string | undefined>(undefined)
   const debouncedName = useDebounce(name, 500)
+  const [isMounted, setIsMounted] = useState(false)
+  useEffect(() => setIsMounted(true), [])
 
   const regex = new RegExp('^[a-z0-9-]+$')
   const enabled = !!debouncedName && regex.test(debouncedName)
@@ -47,6 +49,8 @@ export default function App() {
       body: JSON.stringify(requestBody),
     }
   )
+
+  if (!isMounted) return null
 
   return (
     <Card style={{ width: '100%', alignItems: 'center', gap: '1.5rem' }}>
@@ -96,9 +100,9 @@ export default function App() {
             : 'Something went wrong'}
         </Helper>
       ) : gatewayData ? (
-        <Helper success>
+        <Helper>
           <p>
-            Success! Visit the{' '}
+            Visit the{' '}
             <a
               href={`https://app.ens.domains/${debouncedName}.offchaindemo.eth`}
               target="_blank"
@@ -110,7 +114,7 @@ export default function App() {
             >
               ENS Manager
             </a>{' '}
-            to see your name. It will stop working in 24 hours.
+            to see your name. It will stop working in 1 hour.
           </p>
         </Helper>
       ) : !!debouncedName && !enabled ? (
