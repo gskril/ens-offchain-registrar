@@ -7,12 +7,12 @@ export async function set(
   isTemporary?: boolean
 ) {
   const value = JSON.stringify(records)
-  const ttl = 86_400 // 24 hours
+  const ttl = 3_600 // 1 hour
   const expirationTtl = isTemporary ? ttl : undefined
 
   try {
     await RECORDS.put(name, value, {
-      expirationTtl, // Discard demo keys after 24 hours
+      expirationTtl, // Discard demo keys after TTL
       metadata: {
         updated_at: new Date().toISOString(),
       },
