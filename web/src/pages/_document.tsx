@@ -8,6 +8,18 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="https://app.ens.domains/favicon-32x32.png"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="https://app.ens.domains/favicon-16x16.png"
+          />
           <meta property="twitter:creator" content="@gregskril" />
           <meta property="twitter:card" content="summary_large_image" />
         </Head>

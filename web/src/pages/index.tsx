@@ -1,5 +1,6 @@
 import { Button, Card, Input } from '@ensdomains/thorin'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
+import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { useAccount, useSignMessage } from 'wagmi'
 
@@ -39,20 +40,19 @@ export default function App() {
     isTemporary: true,
   }
 
-  const { data: gatewayData, error: gatewayError } = useFetch(
-    data && '/api/register',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    }
-  )
+  const {
+    data: gatewayData,
+    error: gatewayError,
+    isLoading: gatewayIsLoading,
+  } = useFetch(data && '/api/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(requestBody),
+  })
 
-  if (!isMounted) return null
-
-  return (
+  const content = (
     <Card style={{ width: '100%', alignItems: 'center', gap: '1.5rem' }}>
       <ConnectButton showBalance={false} />
 
@@ -74,7 +74,7 @@ export default function App() {
           type="text"
           label="Name"
           suffix=".offchaindemo.eth"
-          placeholder="ethny"
+          placeholder="ens"
           required
           disabled={!!data || !address}
           onChange={(e) => setName(e.target.value)}
@@ -83,12 +83,16 @@ export default function App() {
         <Input
           type="text"
           label="Description"
-          placeholder="My cool event"
+          placeholder="Your portable web3 profile"
           disabled={!!data || !address}
           onChange={(e) => setDescription(e.target.value)}
         />
 
-        <Button type="submit" disabled={!enabled || !!data} loading={isLoading}>
+        <Button
+          type="submit"
+          disabled={!enabled || !!data}
+          loading={isLoading || gatewayIsLoading}
+        >
           Register
         </Button>
       </form>
@@ -121,5 +125,24 @@ export default function App() {
         <Helper type="error">Name must be lowercase alphanumeric</Helper>
       ) : null}
     </Card>
+  )
+
+  return (
+    <>
+      <Head>
+        <title>Offchain ENS Registrar</title>
+        <meta property="og:title" content="Offchain ENS Registrar" />
+        <meta
+          name="description"
+          content="Quick demo of how offchain ENS names work"
+        />
+        <meta
+          property="og:description"
+          content="Quick demo of how offchain ENS names work"
+        />
+      </Head>
+
+      {isMounted && content}
+    </>
   )
 }

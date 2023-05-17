@@ -4,6 +4,7 @@ import { useEffect, useReducer, useRef } from 'react'
 interface State<T> {
   data?: T
   error?: Error
+  isLoading: boolean
 }
 
 type Cache<T> = { [url: string]: T }
@@ -26,17 +27,18 @@ export function useFetch<T = unknown>(
   const initialState: State<T> = {
     error: undefined,
     data: undefined,
+    isLoading: false,
   }
 
   // Keep state logic separated
   const fetchReducer = (state: State<T>, action: Action<T>): State<T> => {
     switch (action.type) {
       case 'loading':
-        return { ...initialState }
+        return { ...initialState, isLoading: true }
       case 'fetched':
-        return { ...initialState, data: action.payload }
+        return { ...initialState, data: action.payload, isLoading: false }
       case 'error':
-        return { ...initialState, error: action.payload }
+        return { ...initialState, error: action.payload, isLoading: false }
       default:
         return state
     }
