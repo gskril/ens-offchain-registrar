@@ -20,8 +20,6 @@ export default class MyDocument extends Document {
             sizes="16x16"
             href="https://app.ens.domains/favicon-16x16.png"
           />
-          <meta property="twitter:creator" content="@gregskril" />
-          <meta property="twitter:card" content="summary_large_image" />
         </Head>
         <body>
           <Main />
