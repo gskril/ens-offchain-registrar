@@ -7,6 +7,6 @@ export const Layout = styled.div`
   align-items: center;
   padding: 1rem;
   max-width: 30rem;
-  min-height: 100vh;
+  min-height: 100svh;
   margin: 0 auto;
 `
