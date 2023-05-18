@@ -1,15 +1,5 @@
-## Opinionated Web3 Project Starter Template
+## ENS Subname Registrar Website
 
-This is a starter template for building web3 projects using my preferred stack:
+Once you've deployed the CloudFlare Worker, update [this line](src/pages/api/register.ts#L33-L34) to point to your CloudFlare Worker.
 
-- Next.js
-- Styled Components
-- Styled JSX (with Sass support)
-- Viem
-- Wagmi
-- RainbowKit
-- Plausible Analytics
-
-It also includes hooks that I tend to use often and my eslint/prettier configuration to keep things consistent.
-
-Inspired by [@carlosdp/starter-web3](https://github.com/carlosdp/starter-web3)
+Then, run `yarn dev` to start the website locally and test it out.
