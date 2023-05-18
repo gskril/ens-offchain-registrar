@@ -43,6 +43,7 @@ export async function setName(request: IRequest): Promise<Response> {
   const existingName = await get(name)
   if (
     existingName &&
+    existingName.addresses &&
     existingName.addresses['60'].toLowerCase() !==
       records.addresses['60'].toLowerCase()
   ) {
