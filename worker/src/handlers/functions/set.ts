@@ -1,5 +1,4 @@
 import { NameData } from '../../models/data'
-declare const RECORDS: KVNamespace
 
 export async function set(
   name: string,
