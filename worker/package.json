@@ -17,7 +17,8 @@
     "wrangler": "2.12.3"
   },
   "dependencies": {
-    "dotenv": "^16.0.3",
+    "@ensdomains/ens-contracts": "^0.0.20",
+    "@ensdomains/offchain-resolver-contracts": "^0.2.1",
     "ethers": "5.7.2",
     "itty-router": "^3.0.11",
     "zod": "^3.21.4"
