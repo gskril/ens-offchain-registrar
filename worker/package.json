@@ -17,6 +17,7 @@
     "wrangler": "2.12.3"
   },
   "dependencies": {
+    "@ensdomains/ccip-read-cf-worker": "^0.0.1",
     "@ensdomains/ens-contracts": "^0.0.20",
     "@ensdomains/offchain-resolver-contracts": "^0.2.1",
     "ethers": "5.7.2",
