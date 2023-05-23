@@ -1,24 +1,25 @@
-import { Button, Card, Input } from '@ensdomains/thorin'
+import { Button, Input } from '@ensdomains/thorin'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useAccount, useSignMessage } from 'wagmi'
 
 import { Helper } from '@/components/Helper'
+import { useDebounce } from '@/hooks/useDebounce'
+import { useFetch } from '@/hooks/useFetch'
+import { useIsMounted } from '@/hooks/useIsMounted'
+import { Card, Form, Link } from '@/styles'
 import { WorkerRequest } from '@/types'
-
-import useDebounce from '../hooks/useDebounce'
-import { useFetch } from '../hooks/useFetch'
 
 export default function App() {
   const { address } = useAccount()
+  const isMounted = useIsMounted()
+
   const [name, setName] = useState<string | undefined>(undefined)
   const [description, setDescription] = useState<string | undefined>(undefined)
-  const debouncedName = useDebounce(name, 500)
-  const [isMounted, setIsMounted] = useState(false)
-  useEffect(() => setIsMounted(true), [])
 
   const regex = new RegExp('^[a-z0-9-]+$')
+  const debouncedName = useDebounce(name, 500)
   const enabled = !!debouncedName && regex.test(debouncedName)
 
   const { data, isLoading, signMessage, variables } = useSignMessage()
@@ -53,21 +54,15 @@ export default function App() {
   })
 
   const content = (
-    <Card style={{ width: '100%', alignItems: 'center', gap: '1.5rem' }}>
+    <Card>
       <ConnectButton showBalance={false} />
 
-      <form
+      <Form
         onSubmit={(e) => {
           e.preventDefault()
           signMessage({
             message: `Register ${debouncedName}.offchaindemo.eth`,
           })
-        }}
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '100%',
-          gap: '1rem',
         }}
       >
         <Input
@@ -95,7 +90,7 @@ export default function App() {
         >
           Register
         </Button>
-      </form>
+      </Form>
 
       {gatewayError ? (
         <Helper type="error">
@@ -107,17 +102,9 @@ export default function App() {
         <Helper>
           <p>
             Visit the{' '}
-            <a
-              href={`https://app.ens.domains/${debouncedName}.offchaindemo.eth`}
-              target="_blank"
-              style={{
-                fontWeight: '500',
-                color: '#3888ff',
-                textDecoration: 'underline',
-              }}
-            >
+            <Link href={`https://ens.app/${debouncedName}.offchaindemo.eth`}>
               ENS Manager
-            </a>{' '}
+            </Link>{' '}
             to see your name. It will stop working in 1 hour.
           </p>
         </Helper>
