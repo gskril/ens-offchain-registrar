@@ -1,4 +1,4 @@
-# ENS Offchain Registrar (WIP)
+# ENS Offchain Registrar
 
 This repo builds on top of [ensdomains/offchain-resolver](https://github.com/ensdomains/offchain-resolver) to demonstrate what is effectively an offchain subname registrar for ENS names.
 

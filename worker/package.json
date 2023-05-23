@@ -1,13 +1,11 @@
 {
-  "name": "name",
+  "name": "worker",
   "version": "1.0.0",
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "tsc",
-    "clean": "rm -rf ./dist && rm -rf ./node_modules",
-    "dev": "tsc && node ./dist/index.js",
-    "start": "tsc && node ./dist/index.js"
+    "dev": "wrangler dev",
+    "deploy": "wrangler publish"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230307.0",
