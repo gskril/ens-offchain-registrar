@@ -28,6 +28,12 @@ export async function setName(request: IRequest): Promise<Response> {
 
   const { name, records, signature, isTemporary } = safeParse.data
 
+  // Only allow 3LDs, no nested subdomains
+  if (name.split('.').length !== 3) {
+    const response = { success: false, error: 'Invalid name' }
+    return new Response(JSON.stringify(response), { status: 400 })
+  }
+
   // validate signature
   try {
     const signer = verifyMessage(signature.message, signature.hash)
