@@ -35,10 +35,17 @@ export const database: Database = {
       return { addr: '', ttl: 0 }
     }
   },
-  contenthash(name) {
-    return {
-      contenthash: EMPTY_CONTENT_HASH,
-      ttl: 0,
+  async contenthash(name) {
+    try {
+      const nameData = await get(name)
+      const contenthash = nameData?.contenthash || EMPTY_CONTENT_HASH
+      return { contenthash, ttl: 0 }
+    } catch (error) {
+      console.error('Error resolving contenthash', error)
+      return {
+        contenthash: EMPTY_CONTENT_HASH,
+        ttl: 0,
+      }
     }
   },
   async text(name, key) {
