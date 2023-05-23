@@ -4,7 +4,7 @@ export interface Name {
 }
 
 export interface NameData {
-  addresses: {
+  addresses?: {
     [coinType: number]: string
   }
   text?: { [key: string]: string }
