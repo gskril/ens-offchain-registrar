@@ -101,7 +101,7 @@ export function makeServer(
         )
 
         const sig = signer.signDigest(messageHash)
-        const sigData = hexConcat([sig.r, sig._vs])
+        const sigData = hexConcat([sig.r, sig.s, new Uint8Array([sig.v])])
         return [result, validUntil, sigData]
       },
     },
