@@ -14,6 +14,7 @@ export async function set(
       expirationTtl, // Discard demo keys after TTL
       metadata: {
         updated_at: new Date().toISOString(),
+        owner: records?.addresses?.[60],
       },
     })
   } catch {
