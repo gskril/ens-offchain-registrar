@@ -1,5 +1,9 @@
-import { Card as ThorinCard } from '@ensdomains/thorin'
-import styled from 'styled-components'
+import {
+  Card as ThorinCard,
+  Helper as ThorinHelper,
+  mq,
+} from '@ensdomains/thorin'
+import styled, { css } from 'styled-components'
 
 export const Form = styled.form`
   display: flex;
@@ -17,8 +21,29 @@ export const Card = styled(ThorinCard)`
 export const Link = styled.a.attrs({
   target: '_blank',
   rel: 'noopener noreferrer',
-})`
-  color: #3888ff;
-  font-weight: 500;
-  text-decoration: underline;
+})(
+  ({ theme }) => css`
+    color: ${theme.colors.accent};
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  `
+)
+
+export const Helper = styled(ThorinHelper)`
+  svg {
+    display: none;
+  }
+`
+
+export const Spacer = styled.div`
+  display: block;
+  width: 100%;
+  height: 1rem;
+
+  ${mq.sm.max(css`
+    height: 0;
+  `)}
 `

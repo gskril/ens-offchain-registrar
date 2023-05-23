@@ -4,11 +4,11 @@ import Head from 'next/head'
 import { useState } from 'react'
 import { useAccount, useSignMessage } from 'wagmi'
 
-import { Helper } from '@/components/Helper'
+import { Footer } from '@/components/Footer'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useFetch } from '@/hooks/useFetch'
 import { useIsMounted } from '@/hooks/useIsMounted'
-import { Card, Form, Link } from '@/styles'
+import { Card, Form, Helper, Link, Spacer } from '@/styles'
 import { WorkerRequest } from '@/types'
 
 export default function App() {
@@ -129,7 +129,13 @@ export default function App() {
         />
       </Head>
 
-      {isMounted && content}
+      {isMounted && (
+        <>
+          <Spacer />
+          {content}
+          <Footer />
+        </>
+      )}
     </>
   )
 }
