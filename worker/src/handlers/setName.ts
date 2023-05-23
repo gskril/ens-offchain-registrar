@@ -1,5 +1,5 @@
-import { IRequest } from 'itty-router'
 import { verifyMessage } from 'ethers/lib/utils'
+import { IRequest } from 'itty-router'
 import zod from 'zod'
 
 import { get } from './functions/get'

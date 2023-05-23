@@ -1,9 +1,10 @@
-import { abi as IResolverService_abi } from '@ensdomains/offchain-resolver-contracts/artifacts/contracts/OffchainResolver.sol/IResolverService.json'
-import { abi as Resolver_abi } from '@ensdomains/ens-contracts/artifacts/contracts/resolvers/Resolver.sol/Resolver.json'
-import { Buffer } from 'buffer'
-import { ethers, BytesLike } from 'ethers'
-import { hexConcat, Result } from 'ethers/lib/utils'
 import { Server } from '@ensdomains/ccip-read-cf-worker'
+import { abi as Resolver_abi } from '@ensdomains/ens-contracts/artifacts/contracts/resolvers/Resolver.sol/Resolver.json'
+import { abi as IResolverService_abi } from '@ensdomains/offchain-resolver-contracts/artifacts/contracts/OffchainResolver.sol/IResolverService.json'
+import { Buffer } from 'buffer'
+import { BytesLike, ethers } from 'ethers'
+import { Result, hexConcat } from 'ethers/lib/utils'
+
 import { Database, DatabaseResult } from './db'
 
 const Resolver = new ethers.utils.Interface(Resolver_abi)

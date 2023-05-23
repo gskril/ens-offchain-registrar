@@ -1,5 +1,6 @@
-import zod from 'zod'
 import type { IRequest } from 'itty-router'
+import zod from 'zod'
+
 import { get } from './functions/get'
 
 export async function getName(request: IRequest) {
