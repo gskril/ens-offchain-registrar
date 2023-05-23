@@ -1,6 +1,9 @@
-import { get } from './functions/get'
+import { get } from './handlers/functions/get'
 
 type PromiseOrResult<T> = T | Promise<T>
+
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+const EMPTY_CONTENT_HASH = '0x'
 
 export interface Database {
   addr(
@@ -16,11 +19,16 @@ export interface Database {
   ): PromiseOrResult<{ contenthash: string; ttl: number }>
 }
 
+export interface DatabaseResult {
+  result: any[]
+  ttl: number
+}
+
 export const database: Database = {
   async addr(name, coinType) {
     try {
       const nameData = await get(name)
-      const addr = nameData?.addresses?.[coinType] || ''
+      const addr = nameData?.addresses?.[coinType] || ZERO_ADDRESS
       return { addr, ttl: 0 }
     } catch (error) {
       console.error('Error resolving addr', error)
@@ -29,7 +37,7 @@ export const database: Database = {
   },
   contenthash(name) {
     return {
-      contenthash: '',
+      contenthash: EMPTY_CONTENT_HASH,
       ttl: 0,
     }
   },

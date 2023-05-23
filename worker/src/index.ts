@@ -1,7 +1,8 @@
 import { Router } from 'itty-router'
-import { database, getKeys, getName, setName } from './handlers'
+import { getKeys, getName, setName } from './handlers'
 import { SigningKey } from 'ethers/lib/utils'
 import { makeApp } from './server'
+import { database } from './db'
 
 const router = Router()
 

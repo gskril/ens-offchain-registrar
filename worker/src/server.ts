@@ -4,29 +4,9 @@ import { Buffer } from 'buffer'
 import { ethers, BytesLike } from 'ethers'
 import { hexConcat, Result } from 'ethers/lib/utils'
 import { Server } from '@ensdomains/ccip-read-cf-worker'
+import { Database, DatabaseResult } from './db'
 
 const Resolver = new ethers.utils.Interface(Resolver_abi)
-
-interface DatabaseResult {
-  result: any[]
-  ttl: number
-}
-
-type PromiseOrResult<T> = T | Promise<T>
-
-export interface Database {
-  addr(
-    name: string,
-    coinType: number
-  ): PromiseOrResult<{ addr: string; ttl: number }>
-  text(
-    name: string,
-    key: string
-  ): PromiseOrResult<{ value: string; ttl: number }>
-  contenthash(
-    name: string
-  ): PromiseOrResult<{ contenthash: string; ttl: number }>
-}
 
 function decodeDnsName(dnsname: Buffer) {
   const labels = []
@@ -87,7 +67,7 @@ async function query(
   }
 
   const { result, ttl } = await handler(db, name, args.slice(1))
-  console.log('result, ttl', result, ttl)
+
   return {
     result: Resolver.encodeFunctionResult(signature, result),
     validUntil: Math.floor(Date.now() / 1000 + ttl),
@@ -104,6 +84,7 @@ export function makeServer(
       type: 'resolve',
       func: async ([encodedName, data]: Result, request) => {
         const name = decodeDnsName(Buffer.from(encodedName.slice(2), 'hex'))
+
         // Query the database
         const { result, validUntil } = await query(await db, name, data)
 
@@ -118,6 +99,7 @@ export function makeServer(
             ethers.utils.keccak256(result),
           ]
         )
+
         const sig = signer.signDigest(messageHash)
         const sigData = hexConcat([sig.r, sig._vs])
         return [result, validUntil, sigData]
