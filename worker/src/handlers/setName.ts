@@ -17,7 +17,6 @@ export async function setName(request: IRequest): Promise<Response> {
       hash: zod.string(),
       message: zod.string(),
     }),
-    isTemporary: zod.boolean().optional(),
   })
 
   const safeParse = schema.safeParse(await request.json())
@@ -26,7 +25,7 @@ export async function setName(request: IRequest): Promise<Response> {
     return new Response(JSON.stringify(response), { status: 400 })
   }
 
-  const { name, records, signature, isTemporary } = safeParse.data
+  const { name, records, signature } = safeParse.data
 
   // Only allow 3LDs, no nested subdomains
   if (name.split('.').length !== 3) {
@@ -58,7 +57,7 @@ export async function setName(request: IRequest): Promise<Response> {
   }
 
   try {
-    await set(name, records, isTemporary)
+    await set(name, records)
     const response = { success: true }
     return new Response(JSON.stringify(response), { status: 201 })
   } catch (err) {

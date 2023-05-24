@@ -38,7 +38,6 @@ export default function App() {
       hash: data,
       message: variables?.message,
     },
-    isTemporary: true,
   }
 
   const {
@@ -105,7 +104,7 @@ export default function App() {
             <Link href={`https://ens.app/${debouncedName}.offchaindemo.eth`}>
               ENS Manager
             </Link>{' '}
-            to see your name. It will stop working in 1 hour.
+            to see your name. It will stop working in 24 hours.
           </p>
         </Helper>
       ) : !!debouncedName && !enabled ? (

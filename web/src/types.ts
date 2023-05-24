@@ -10,5 +10,4 @@ export interface WorkerRequest {
     hash: string | undefined
     message: string | undefined
   }
-  isTemporary?: boolean
 }

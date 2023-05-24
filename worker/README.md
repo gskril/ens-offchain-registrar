@@ -4,6 +4,8 @@
 
 These choices allow for a scalable namespace with low cost (store up to 1M names for free), low latency, and high availability.
 
+> **Note**: By default, names are set to expire after 24 hours. This can be disabled by changing the `IS_TEMPORARY` boolean in [wrangler.toml](wrangler.toml).
+
 ## API Routes
 
 - `/keys` - GET - Returns all keys in KV

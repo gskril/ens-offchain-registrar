@@ -1,13 +1,9 @@
 import { NameData } from '../../models/data'
 
-export async function set(
-  name: string,
-  records: NameData,
-  isTemporary?: boolean
-) {
+export async function set(name: string, records: NameData) {
   const value = JSON.stringify(records)
-  const ttl = 3_600 // 1 hour
-  const expirationTtl = isTemporary ? ttl : undefined
+  const ttl = 86_400 // 24 hours
+  const expirationTtl = IS_TEMPORARY ? ttl : undefined
 
   try {
     await RECORDS.put(name, value, {
