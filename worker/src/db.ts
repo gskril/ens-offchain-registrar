@@ -4,6 +4,7 @@ type PromiseOrResult<T> = T | Promise<T>
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const EMPTY_CONTENT_HASH = '0x'
+const TTL = 1000
 
 export interface Database {
   addr(
@@ -29,22 +30,22 @@ export const database: Database = {
     try {
       const nameData = await get(name)
       const addr = nameData?.addresses?.[coinType] || ZERO_ADDRESS
-      return { addr, ttl: 0 }
+      return { addr, ttl: TTL }
     } catch (error) {
       console.error('Error resolving addr', error)
-      return { addr: '', ttl: 0 }
+      return { addr: '', ttl: TTL }
     }
   },
   async contenthash(name) {
     try {
       const nameData = await get(name)
       const contenthash = nameData?.contenthash || EMPTY_CONTENT_HASH
-      return { contenthash, ttl: 0 }
+      return { contenthash, ttl: TTL }
     } catch (error) {
       console.error('Error resolving contenthash', error)
       return {
         contenthash: EMPTY_CONTENT_HASH,
-        ttl: 0,
+        ttl: TTL,
       }
     }
   },
@@ -53,10 +54,10 @@ export const database: Database = {
       const nameData = await get(name)
       const value = nameData?.text?.[key] || ''
 
-      return { value, ttl: 0 }
+      return { value, ttl: TTL }
     } catch (error) {
       console.error('Error resolving text', error)
-      return { value: '', ttl: 0 }
+      return { value: '', ttl: TTL }
     }
   },
 }
