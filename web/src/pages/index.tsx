@@ -44,7 +44,7 @@ export default function App() {
     data: gatewayData,
     error: gatewayError,
     isLoading: gatewayIsLoading,
-  } = useFetch(data && '/api/register', {
+  } = useFetch(data && 'https://ens-gateway.gregskril.workers.dev/set', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
