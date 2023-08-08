@@ -7,13 +7,11 @@ import { useAccount, useSignMessage } from 'wagmi'
 import { Footer } from '@/components/Footer'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useFetch } from '@/hooks/useFetch'
-import { useIsMounted } from '@/hooks/useIsMounted'
 import { Card, Form, Helper, Link, Spacer } from '@/styles'
 import { WorkerRequest } from '@/types'
 
 export default function App() {
   const { address } = useAccount()
-  const isMounted = useIsMounted()
 
   const [name, setName] = useState<string | undefined>(undefined)
   const [description, setDescription] = useState<string | undefined>(undefined)
@@ -52,67 +50,6 @@ export default function App() {
     body: JSON.stringify(requestBody),
   })
 
-  const content = (
-    <Card>
-      <ConnectButton showBalance={false} />
-
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault()
-          signMessage({
-            message: `Register ${debouncedName}.offchaindemo.eth`,
-          })
-        }}
-      >
-        <Input
-          type="text"
-          label="Name"
-          suffix=".offchaindemo.eth"
-          placeholder="ens"
-          required
-          disabled={!!data || !address}
-          onChange={(e) => setName(e.target.value)}
-        />
-
-        <Input
-          type="text"
-          label="Description"
-          placeholder="Your portable web3 profile"
-          disabled={!!data || !address}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-
-        <Button
-          type="submit"
-          disabled={!enabled || !!data}
-          loading={isLoading || gatewayIsLoading}
-        >
-          Register
-        </Button>
-      </Form>
-
-      {gatewayError ? (
-        <Helper type="error">
-          {gatewayError.message === 'Conflict'
-            ? 'Somebody already registered that name'
-            : 'Something went wrong'}
-        </Helper>
-      ) : gatewayData ? (
-        <Helper>
-          <p>
-            Visit the{' '}
-            <Link href={`https://ens.app/${debouncedName}.offchaindemo.eth`}>
-              ENS Manager
-            </Link>{' '}
-            to see your name. It will stop working in 24 hours.
-          </p>
-        </Helper>
-      ) : !!debouncedName && !enabled ? (
-        <Helper type="error">Name must be lowercase alphanumeric</Helper>
-      ) : null}
-    </Card>
-  )
-
   return (
     <>
       <Head>
@@ -128,13 +65,68 @@ export default function App() {
         />
       </Head>
 
-      {isMounted && (
-        <>
-          <Spacer />
-          {content}
-          <Footer />
-        </>
-      )}
+      <Spacer />
+
+      <Card>
+        <ConnectButton showBalance={false} />
+
+        <Form
+          onSubmit={(e) => {
+            e.preventDefault()
+            signMessage({
+              message: `Register ${debouncedName}.offchaindemo.eth`,
+            })
+          }}
+        >
+          <Input
+            type="text"
+            label="Name"
+            suffix=".offchaindemo.eth"
+            placeholder="ens"
+            required
+            disabled={!!data || !address}
+            onChange={(e) => setName(e.target.value)}
+          />
+
+          <Input
+            type="text"
+            label="Description"
+            placeholder="Your portable web3 profile"
+            disabled={!!data || !address}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+
+          <Button
+            type="submit"
+            disabled={!enabled || !!data}
+            loading={isLoading || gatewayIsLoading}
+          >
+            Register
+          </Button>
+        </Form>
+
+        {gatewayError ? (
+          <Helper type="error">
+            {gatewayError.message === 'Conflict'
+              ? 'Somebody already registered that name'
+              : 'Something went wrong'}
+          </Helper>
+        ) : gatewayData ? (
+          <Helper>
+            <p>
+              Visit the{' '}
+              <Link href={`https://ens.app/${debouncedName}.offchaindemo.eth`}>
+                ENS Manager
+              </Link>{' '}
+              to see your name. It will stop working in 24 hours.
+            </p>
+          </Helper>
+        ) : !!debouncedName && !enabled ? (
+          <Helper type="error">Name must be lowercase alphanumeric</Helper>
+        ) : null}
+      </Card>
+
+      <Footer />
     </>
   )
 }
