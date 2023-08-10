@@ -1,12 +1,13 @@
+import { Env } from '../../env'
 import { NameData } from '../../models/data'
 
-export async function set(name: string, records: NameData) {
+export async function set(name: string, records: NameData, env: Env) {
   const value = JSON.stringify(records)
   const ttl = 86_400 // 24 hours
-  const expirationTtl = IS_TEMPORARY ? ttl : undefined
+  const expirationTtl = env.IS_TEMPORARY ? ttl : undefined
 
   try {
-    await RECORDS.put(name, value, {
+    await env.RECORDS.put(name, value, {
       expirationTtl, // Discard demo keys after TTL
       metadata: {
         updated_at: new Date().toISOString(),

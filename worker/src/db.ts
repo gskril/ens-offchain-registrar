@@ -1,3 +1,4 @@
+import { Env } from './env'
 import { get } from './handlers/functions/get'
 
 type PromiseOrResult<T> = T | Promise<T>
@@ -9,14 +10,17 @@ const TTL = 1000
 export interface Database {
   addr(
     name: string,
-    coinType: number
+    coinType: number,
+    env: Env
   ): PromiseOrResult<{ addr: string; ttl: number }>
   text(
     name: string,
-    key: string
+    key: string,
+    env: Env
   ): PromiseOrResult<{ value: string; ttl: number }>
   contenthash(
-    name: string
+    name: string,
+    env: Env
   ): PromiseOrResult<{ contenthash: string; ttl: number }>
 }
 
@@ -26,9 +30,9 @@ export interface DatabaseResult {
 }
 
 export const database: Database = {
-  async addr(name, coinType) {
+  async addr(name, coinType, env) {
     try {
-      const nameData = await get(name)
+      const nameData = await get(name, env)
       const addr = nameData?.addresses?.[coinType] || ZERO_ADDRESS
       return { addr, ttl: TTL }
     } catch (error) {
@@ -36,9 +40,9 @@ export const database: Database = {
       return { addr: '', ttl: TTL }
     }
   },
-  async contenthash(name) {
+  async contenthash(name, env) {
     try {
-      const nameData = await get(name)
+      const nameData = await get(name, env)
       const contenthash = nameData?.contenthash || EMPTY_CONTENT_HASH
       return { contenthash, ttl: TTL }
     } catch (error) {
@@ -49,9 +53,9 @@ export const database: Database = {
       }
     }
   },
-  async text(name, key) {
+  async text(name, key, env) {
     try {
-      const nameData = await get(name)
+      const nameData = await get(name, env)
       const value = nameData?.text?.[key] || ''
 
       return { value, ttl: TTL }

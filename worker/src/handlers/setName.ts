@@ -2,10 +2,11 @@ import { verifyMessage } from 'ethers/lib/utils'
 import { IRequest } from 'itty-router'
 import zod from 'zod'
 
+import { Env } from '../env'
 import { get } from './functions/get'
 import { set } from './functions/set'
 
-export async function setName(request: IRequest): Promise<Response> {
+export async function setName(request: IRequest, env: Env): Promise<Response> {
   const schema = zod.object({
     name: zod.string().regex(/^[a-z0-9-.]+$/),
     records: zod.object({
@@ -45,7 +46,7 @@ export async function setName(request: IRequest): Promise<Response> {
   }
 
   // check if the name is already taken, and if the sender owns it
-  const existingName = await get(name)
+  const existingName = await get(name, env)
   if (
     existingName &&
     existingName.addresses &&
@@ -57,7 +58,7 @@ export async function setName(request: IRequest): Promise<Response> {
   }
 
   try {
-    await set(name, records)
+    await set(name, records, env)
     const response = { success: true }
     return new Response(JSON.stringify(response), { status: 201 })
   } catch (err) {
