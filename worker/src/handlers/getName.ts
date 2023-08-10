@@ -12,7 +12,7 @@ export async function getName(request: IRequest, env: Env) {
 
   if (!safeParse.success) {
     const response = { error: safeParse.error }
-    return new Response(JSON.stringify(response), { status: 400 })
+    return Response.json(response, { status: 400 })
   }
 
   const { name } = safeParse.data
@@ -20,10 +20,10 @@ export async function getName(request: IRequest, env: Env) {
 
   if (nameData === null) {
     const response = { error: `No records found for ${name}` }
-    return new Response(JSON.stringify(response), { status: 404 })
+    return Response.json(response, { status: 404 })
   }
 
-  return new Response(JSON.stringify(nameData), {
+  return Response.json(nameData, {
     status: 200,
   })
 }

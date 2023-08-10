@@ -20,10 +20,12 @@ export async function setName(request: IRequest, env: Env): Promise<Response> {
     }),
   })
 
-  const safeParse = schema.safeParse(await request.json())
+  const body = await request.json()
+  const safeParse = schema.safeParse(body)
+
   if (!safeParse.success) {
     const response = { success: false, error: safeParse.error }
-    return new Response(JSON.stringify(response), { status: 400 })
+    return Response.json(response, { status: 400 })
   }
 
   const { name, records, signature } = safeParse.data
@@ -31,7 +33,7 @@ export async function setName(request: IRequest, env: Env): Promise<Response> {
   // Only allow 3LDs, no nested subdomains
   if (name.split('.').length !== 3) {
     const response = { success: false, error: 'Invalid name' }
-    return new Response(JSON.stringify(response), { status: 400 })
+    return Response.json(response, { status: 400 })
   }
 
   // validate signature
@@ -42,7 +44,7 @@ export async function setName(request: IRequest, env: Env): Promise<Response> {
     }
   } catch (err) {
     const response = { success: false, error: err }
-    return new Response(JSON.stringify(response), { status: 401 })
+    return Response.json(response, { status: 401 })
   }
 
   // check if the name is already taken, and if the sender owns it
@@ -54,15 +56,18 @@ export async function setName(request: IRequest, env: Env): Promise<Response> {
       records.addresses['60'].toLowerCase()
   ) {
     const response = { success: false, error: 'Name already taken' }
-    return new Response(JSON.stringify(response), { status: 409 })
+    return Response.json(response, { status: 409 })
   }
 
   try {
     await set(name, records, env)
     const response = { success: true }
-    return new Response(JSON.stringify(response), { status: 201 })
-  } catch (err) {
-    const response = { success: false, error: err }
-    return new Response(JSON.stringify(response), { status: 500 })
+    return Response.json(response, { status: 201 })
+  } catch {
+    const response = {
+      success: false,
+      error: 'Error setting name',
+    }
+    return Response.json(response, { status: 500 })
   }
 }

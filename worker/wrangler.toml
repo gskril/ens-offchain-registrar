@@ -2,12 +2,10 @@ name = "ens-gateway"
 main = "src/index.ts"
 compatibility_date = "2023-03-15"
 
-kv_namespaces = [
-  { binding = "RECORDS", id = "a96ae7c81e4a4507a83fcdf8316eb12f", preview_id = "176b9d2f873d4af282d93c0e94da8e42" },
-]
-
-[vars]
-IS_TEMPORARY=true
+[[d1_databases]]
+binding = "D1"
+database_name = "offchaindemo"
+database_id = "6b30bc65-edda-4e25-bb5a-8681b0419031"
 
 # The necessary secrets are:
 # - PRIVATE_KEY

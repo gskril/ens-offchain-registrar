@@ -3036,6 +3036,16 @@ kleur@^4.1.5:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-4.1.5.tgz#95106101795f7050c6c650f350c683febddb1780"
   integrity sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==
 
+kysely-d1@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/kysely-d1/-/kysely-d1-0.3.0.tgz#6519a54eb4e6d0cecbcfd0e9e8e21e8c141d19f7"
+  integrity sha512-9wTbE6ooLiYtBa4wPg9e4fjfcmvRtgE/2j9pAjYrIq+iz+EsH/Hj9YbtxpEXA6JoRgfulVQ1EtGj6aycGGRpYw==
+
+kysely@^0.26.1:
+  version "0.26.1"
+  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.26.1.tgz#2d2fb9316d53f3062596102c98d0d476e4e097b5"
+  integrity sha512-FVRomkdZofBu3O8SiwAOXrwbhPZZr8mBN5ZeUWyprH29jzvy6Inzqbd0IMmGxpd4rcOCL9HyyBNWBa8FBqDAdg==
+
 lcid@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/lcid/-/lcid-1.0.0.tgz#308accafa0bc483a3867b4b6f2b9506251d1b835"

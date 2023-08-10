@@ -1,13 +1,19 @@
+import { createKysely } from '../../d1/kysely'
 import { Env } from '../../env'
-import { NameData } from '../../models/data'
+import { NameData } from '../../models'
+import { formatNameFromDbToNameData } from './utils'
 
 export async function get(name: string, env: Env): Promise<NameData> {
-  const kvValue = await env.RECORDS.get(name)
+  const db = createKysely(env)
+  const record = await db
+    .selectFrom('names')
+    .select(['name', 'owner', 'addresses', 'texts', 'contenthash'])
+    .where('name', '=', name)
+    .executeTakeFirst()
 
-  if (kvValue === null) {
+  if (!record) {
     return {}
   }
 
-  const records = JSON.parse(kvValue) as NameData
-  return records
+  return formatNameFromDbToNameData(record)
 }

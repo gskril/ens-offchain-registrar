@@ -1,20 +1,20 @@
+import { createKysely } from '../../d1/kysely'
 import { Env } from '../../env'
-import { NameData } from '../../models/data'
+import { NameData } from '../../models'
 
 export async function set(name: string, records: NameData, env: Env) {
-  const value = JSON.stringify(records)
-  const ttl = 86_400 // 24 hours
-  const expirationTtl = env.IS_TEMPORARY ? ttl : undefined
+  console.log('addresses', records.addresses)
+  console.log('texts', records.texts)
 
-  try {
-    await env.RECORDS.put(name, value, {
-      expirationTtl, // Discard demo keys after TTL
-      metadata: {
-        updated_at: new Date().toISOString(),
-        owner: records?.addresses?.[60],
-      },
+  const db = createKysely(env)
+  await db
+    .insertInto('names')
+    .values({
+      name,
+      owner: records?.addresses?.[60] || 'unknown',
+      addresses: records.addresses ? JSON.stringify(records.addresses) : null,
+      texts: records.texts ? JSON.stringify(records.texts) : null,
+      contenthash: records.contenthash || null,
     })
-  } catch {
-    throw new Error('Error saving name')
-  }
+    .execute()
 }

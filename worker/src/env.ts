@@ -1,5 +1,4 @@
 export interface Env {
   PRIVATE_KEY: string
-  IS_TEMPORARY: boolean
-  RECORDS: KVNamespace
+  D1: D1Database
 }

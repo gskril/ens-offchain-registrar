@@ -1,8 +1,15 @@
+import { createKysely } from '../d1/kysely'
 import { Env } from '../env'
+import { formatNameFromDbToNameData } from './functions/utils'
 
 export async function getKeys(env: Env) {
-  const allData = await env.RECORDS.list()
-  return new Response(JSON.stringify(allData), {
+  const db = createKysely(env)
+  const allData = await db
+    .selectFrom('names')
+    .select(['name', 'owner', 'addresses', 'texts', 'contenthash'])
+    .execute()
+
+  return Response.json(formatNameFromDbToNameData(allData), {
     status: 200,
   })
 }
