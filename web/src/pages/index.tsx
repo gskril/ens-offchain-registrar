@@ -28,7 +28,7 @@ export default function App() {
       addresses: {
         60: address,
       },
-      text: {
+      texts: {
         description: description,
       },
     },

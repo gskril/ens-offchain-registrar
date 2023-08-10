@@ -11,7 +11,7 @@ export async function setName(request: IRequest, env: Env): Promise<Response> {
     name: zod.string().regex(/^[a-z0-9-.]+$/),
     records: zod.object({
       addresses: zod.record(zod.string()),
-      text: zod.record(zod.string()).optional(),
+      texts: zod.record(zod.string()).optional(),
       contenthash: zod.string().optional(),
     }),
     signature: zod.object({

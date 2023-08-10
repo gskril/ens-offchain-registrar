@@ -7,6 +7,6 @@ export interface NameData {
   addresses?: {
     [coinType: number]: string
   }
-  text?: { [key: string]: string }
+  texts?: { [key: string]: string }
   contenthash?: string
 }

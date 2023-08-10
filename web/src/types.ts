@@ -4,7 +4,7 @@ export interface WorkerRequest {
     addresses: {
       [coinType: number | string]: string | undefined
     }
-    text?: { [key: string]: string | undefined }
+    texts?: { [key: string]: string | undefined }
   }
   signature: {
     hash: string | undefined
