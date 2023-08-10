@@ -49,14 +49,14 @@ export async function setName(request: IRequest, env: Env): Promise<Response> {
 
   // check if the name is already taken, and if the sender owns it
   const existingName = await get(name, env)
-  if (
-    existingName &&
-    existingName.addresses &&
-    existingName.addresses['60'].toLowerCase() !==
-      records.addresses['60'].toLowerCase()
-  ) {
-    const response = { success: false, error: 'Name already taken' }
-    return Response.json(response, { status: 409 })
+  if (existingName) {
+    const existingOwner = existingName.addresses?.['60']
+    const newOwner = records.addresses?.['60']
+
+    if (existingOwner && newOwner && existingOwner !== newOwner) {
+      const response = { success: false, error: 'Name already taken' }
+      return Response.json(response, { status: 409 })
+    }
   }
 
   try {
