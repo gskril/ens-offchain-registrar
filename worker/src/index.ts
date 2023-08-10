@@ -17,11 +17,7 @@ router
   .all('*', () => new Response('Not found', { status: 404 }))
 
 export default {
-  async fetch(
-    request: Request,
-    env: Env,
-    _ctx: ExecutionContext
-  ): Promise<Response> {
+  async fetch(request: Request, env: Env): Promise<Response> {
     const pathname = new URL(request.url).pathname
 
     // handle CCIP Read requests
