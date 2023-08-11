@@ -113,7 +113,7 @@ export default function App() {
               <Link href={`https://ens.app/${debouncedName}.offchaindemo.eth`}>
                 ENS Manager
               </Link>{' '}
-              to see your name. It will stop working in 24 hours.
+              to see your name
             </p>
           </Helper>
         ) : !!debouncedName && !enabled ? (
