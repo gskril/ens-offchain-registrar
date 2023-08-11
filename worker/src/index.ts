@@ -16,18 +16,19 @@ router
   .post('/set', (request, env) => setName(request, env))
   .all('*', () => new Response('Not found', { status: 404 }))
 
+// Handle requests to the Worker
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const pathname = new URL(request.url).pathname
 
-    // handle CCIP Read requests
+    // Handle CCIP Read requests
     if (pathname.includes('/lookup/')) {
       const signer = new SigningKey(env.PRIVATE_KEY)
       const ccipRouter = makeApp(signer, '/lookup/', database, env)
       return ccipRouter.handle(request).then(corsify)
     }
 
-    // handle other requests
+    // Handle other requests
     return router.handle(request, env).then(corsify)
   },
 }

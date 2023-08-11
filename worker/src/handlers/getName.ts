@@ -19,8 +19,7 @@ export async function getName(request: IRequest, env: Env) {
   const nameData = await get(name, env)
 
   if (nameData === null) {
-    const response = { error: `No records found for ${name}` }
-    return Response.json(response, { status: 404 })
+    return new Response('Name not found', { status: 404 })
   }
 
   return Response.json(nameData, {

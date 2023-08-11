@@ -23,38 +23,35 @@ export async function setName(request: IRequest, env: Env): Promise<Response> {
     return Response.json(response, { status: 400 })
   }
 
-  // validate signature
+  // Validate signature
   try {
     const signer = verifyMessage(signature.message, signature.hash)
     if (signer.toLowerCase() !== owner.toLowerCase()) {
       throw new Error('Invalid signer')
     }
   } catch (err) {
+    console.error(err)
     const response = { success: false, error: err }
     return Response.json(response, { status: 401 })
   }
 
-  // check if the name is already taken, and if the sender owns it
+  // Check if the name is already taken
   const existingName = await get(name, env)
-  if (existingName) {
-    const existingOwner = existingName.addresses?.['60']
 
-    if (existingOwner && existingOwner !== owner) {
-      const response = { success: false, error: 'Name already taken' }
-      return Response.json(response, { status: 409 })
-    }
+  // If the name is owned by someone else, return an error
+  if (existingName && existingName.owner !== owner) {
+    const response = { success: false, error: 'Name already taken' }
+    return Response.json(response, { status: 409 })
   }
 
+  // Save the name
   try {
     await set(safeParse.data, env)
     const response = { success: true }
     return Response.json(response, { status: 201 })
   } catch (err) {
     console.error(err)
-    const response = {
-      success: false,
-      error: 'Error setting name',
-    }
+    const response = { success: false, error: 'Error setting name' }
     return Response.json(response, { status: 500 })
   }
 }
