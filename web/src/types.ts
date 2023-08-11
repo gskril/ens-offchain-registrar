@@ -1,13 +1,11 @@
 export interface WorkerRequest {
   name: string
-  records: {
-    addresses: {
-      [coinType: number | string]: string | undefined
-    }
-    texts?: { [key: string]: string | undefined }
-  }
+  owner: string
+  addresses?: Record<string, string> | undefined
+  texts?: Record<string, string> | undefined
+  contenthash?: string | undefined
   signature: {
-    hash: string | undefined
-    message: string | undefined
+    message: string
+    hash: string
   }
 }

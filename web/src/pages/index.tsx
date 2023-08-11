@@ -24,17 +24,12 @@ export default function App() {
 
   const requestBody: WorkerRequest = {
     name: `${debouncedName}.offchaindemo.eth`,
-    records: {
-      addresses: {
-        60: address,
-      },
-      texts: {
-        description: description,
-      },
-    },
+    owner: address as string,
+    addresses: { '60': address as string },
+    texts: { description: description as string },
     signature: {
-      hash: data,
-      message: variables?.message,
+      hash: data as string,
+      message: variables?.message as string,
     },
   }
 

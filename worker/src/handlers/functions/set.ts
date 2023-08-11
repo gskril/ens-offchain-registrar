@@ -1,16 +1,11 @@
-import { createKysely } from '../../d1/kysely'
+import { createKysely } from '../../db/kysely'
 import { Env } from '../../env'
-import { NameData } from '../../models'
+import { Name } from '../../models'
+import { stringifyNameForDb } from './utils'
 
-export async function set(name: string, records: NameData, env: Env) {
+export async function set(nameData: Name, env: Env) {
   const db = createKysely(env)
-  const body = {
-    name,
-    owner: records?.addresses?.[60] || 'unknown',
-    addresses: records.addresses ? JSON.stringify(records.addresses) : null,
-    texts: records.texts ? JSON.stringify(records.texts) : null,
-    contenthash: records.contenthash || null,
-  }
+  const body = stringifyNameForDb(nameData)
 
   await db
     .insertInto('names')

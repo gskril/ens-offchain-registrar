@@ -1,15 +1,12 @@
-import { createKysely } from '../d1/kysely'
+import { createKysely } from '../db/kysely'
 import { Env } from '../env'
-import { formatNameFromDbToNameData } from './functions/utils'
+import { parseNameFromDb } from './functions/utils'
 
 export async function getNames(env: Env) {
   const db = createKysely(env)
-  const allData = await db
-    .selectFrom('names')
-    .select(['name', 'owner', 'addresses', 'texts', 'contenthash'])
-    .execute()
+  const allData = await db.selectFrom('names').selectAll().execute()
 
-  return Response.json(formatNameFromDbToNameData(allData), {
+  return Response.json(parseNameFromDb(allData), {
     status: 200,
   })
 }

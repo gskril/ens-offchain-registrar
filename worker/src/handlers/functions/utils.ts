@@ -1,30 +1,61 @@
-import { Database } from '../../d1/kysely'
-import { NameData } from '../../models'
+import { Insertable, Selectable } from 'kysely'
 
-type FlatName = Omit<Database['names'], 'createdAt' | 'updatedAt'>
-type NameDataWithName = NameData & { name: string }
+import { Name, NameInKysely } from '../../models'
 
-export function formatNameFromDbToNameData(flatName: FlatName): NameDataWithName
+type SelectableKysely = Selectable<NameInKysely>
+type InsertableKysely = Insertable<NameInKysely>
 
-export function formatNameFromDbToNameData(
-  flatName: FlatName[]
-): NameDataWithName[]
-
-export function formatNameFromDbToNameData(
-  flatName: FlatName | FlatName[]
-): NameDataWithName | NameDataWithName[] {
+/**
+ * Parse `texts` and `addresses` from the database into JSON.
+ * @param flatName Name from the database
+ */
+export function parseNameFromDb(flatName: SelectableKysely): Name
+export function parseNameFromDb(flatName: SelectableKysely[]): Name[]
+export function parseNameFromDb(
+  flatName: SelectableKysely | SelectableKysely[]
+): Name | Name[] {
   if (Array.isArray(flatName)) {
-    return flatName.map(formatName)
+    return flatName.map(parseName)
   }
 
-  return formatName(flatName)
+  return parseName(flatName)
 
-  function formatName(name: FlatName): NameDataWithName {
+  function parseName(name: SelectableKysely) {
     return {
       name: name.name,
+      owner: name.owner,
       addresses: name.addresses ? JSON.parse(name.addresses) : undefined,
       texts: name.texts ? JSON.parse(name.texts) : undefined,
       contenthash: name.contenthash || undefined,
+      createdAt: name.createdAt,
+      updatedAt: name.updatedAt,
+    }
+  }
+}
+
+/**
+ * Stringify `texts` and `addresses` from JSON.
+ * @param name Name to be inserted into the database
+ */
+export function stringifyNameForDb(name: Name): InsertableKysely
+export function stringifyNameForDb(name: Name[]): InsertableKysely[]
+export function stringifyNameForDb(
+  name: Name | Name[]
+): InsertableKysely | InsertableKysely[] {
+  if (Array.isArray(name)) {
+    return name.map(stringifyName)
+  }
+
+  return stringifyName(name)
+
+  function stringifyName(name: Name) {
+    return {
+      name: name.name,
+      owner: name.owner,
+      addresses: name.addresses ? JSON.stringify(name.addresses) : null,
+      texts: name.texts ? JSON.stringify(name.texts) : null,
+      contenthash: name.contenthash || null,
+      updatedAt: new Date().toISOString(),
     }
   }
 }

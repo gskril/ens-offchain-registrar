@@ -5,8 +5,8 @@ import { Buffer } from 'buffer'
 import { BytesLike, ethers } from 'ethers'
 import { Result, hexConcat } from 'ethers/lib/utils'
 
+import { Env } from '../env'
 import { Database, DatabaseResult } from './db'
-import { Env } from './env'
 
 const Resolver = new ethers.utils.Interface(Resolver_abi)
 

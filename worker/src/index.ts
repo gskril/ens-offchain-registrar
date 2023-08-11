@@ -1,10 +1,10 @@
 import { SigningKey } from 'ethers/lib/utils'
 import { Router, createCors } from 'itty-router'
 
-import { database } from './db'
+import { database } from './ccip-read/db'
+import { makeApp } from './ccip-read/server'
 import { Env } from './env'
 import { getName, getNames, setName } from './handlers'
-import { makeApp } from './server'
 
 const { preflight, corsify } = createCors()
 const router = Router()
