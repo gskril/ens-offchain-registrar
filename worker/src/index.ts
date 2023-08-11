@@ -3,7 +3,7 @@ import { Router, createCors } from 'itty-router'
 
 import { database } from './db'
 import { Env } from './env'
-import { getKeys, getName, setName } from './handlers'
+import { getName, getNames, setName } from './handlers'
 import { makeApp } from './server'
 
 const { preflight, corsify } = createCors()
@@ -12,7 +12,7 @@ const router = Router()
 router
   .all('*', preflight)
   .get('/get/:name', (request, env) => getName(request, env))
-  .get('/keys', (request, env) => getKeys(env))
+  .get('/names', (request, env) => getNames(env))
   .post('/set', (request, env) => setName(request, env))
   .all('*', () => new Response('Not found', { status: 404 }))
 
