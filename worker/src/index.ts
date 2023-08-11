@@ -1,16 +1,14 @@
-import { SigningKey } from 'ethers/lib/utils'
 import { Router, createCors } from 'itty-router'
 
-import { database } from './ccip-read/db'
-import { makeApp } from './ccip-read/server'
 import { Env } from './env'
-import { getName, getNames, setName } from './handlers'
+import { getCcipRead, getName, getNames, setName } from './handlers'
 
 const { preflight, corsify } = createCors()
 const router = Router()
 
 router
   .all('*', preflight)
+  .get('/lookup/*', (request, env) => getCcipRead(request, env))
   .get('/get/:name', (request, env) => getName(request, env))
   .get('/names', (request, env) => getNames(env))
   .post('/set', (request, env) => setName(request, env))
@@ -19,16 +17,6 @@ router
 // Handle requests to the Worker
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    const pathname = new URL(request.url).pathname
-
-    // Handle CCIP Read requests
-    if (pathname.includes('/lookup/')) {
-      const signer = new SigningKey(env.PRIVATE_KEY)
-      const ccipRouter = makeApp(signer, '/lookup/', database, env)
-      return ccipRouter.handle(request).then(corsify)
-    }
-
-    // Handle other requests
     return router.handle(request, env).then(corsify)
   },
 }
