@@ -3,7 +3,7 @@ main = "src/index.ts"
 compatibility_date = "2023-03-15"
 
 [[d1_databases]]
-binding = "D1"
+binding = "DB"
 database_name = "offchaindemo"
 database_id = "6b30bc65-edda-4e25-bb5a-8681b0419031"
 

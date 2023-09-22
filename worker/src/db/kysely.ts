@@ -10,7 +10,7 @@ export interface Database {
 
 export function createKysely(env: Env): Kysely<Database> {
   return new Kysely<Database>({
-    dialect: new D1Dialect({ database: env.D1 }),
+    dialect: new D1Dialect({ database: env.DB }),
     plugins: [new CamelCasePlugin()],
   })
 }
