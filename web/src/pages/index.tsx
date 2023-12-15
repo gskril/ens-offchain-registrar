@@ -22,15 +22,19 @@ export default function App() {
 
   const { data, isLoading, signMessage, variables } = useSignMessage()
 
-  const requestBody: WorkerRequest = {
+  const nameData: WorkerRequest['signature']['message'] = {
     name: `${debouncedName}.offchaindemo.eth`,
     owner: address!,
     addresses: { '60': address },
     texts: { description },
+  }
+
+  const requestBody: WorkerRequest = {
     signature: {
       hash: data!,
-      message: variables?.message!,
+      message: nameData,
     },
+    expiration: new Date().getTime() + 60 * 60, // 1 hour
   }
 
   const {
@@ -68,9 +72,7 @@ export default function App() {
         <Form
           onSubmit={(e) => {
             e.preventDefault()
-            signMessage({
-              message: `Register ${debouncedName}.offchaindemo.eth`,
-            })
+            signMessage({ message: JSON.stringify(nameData) })
           }}
         >
           <Input
