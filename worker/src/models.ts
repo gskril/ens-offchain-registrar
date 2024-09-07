@@ -1,5 +1,6 @@
-import { ColumnType, Generated } from 'kysely'
+import { ColumnType } from 'kysely'
 import z from 'zod'
+import { zu } from 'zod_utilz'
 
 export const ZodName = z.object({
   name: z.string().regex(/^[a-z0-9-.]+$/),
@@ -9,11 +10,12 @@ export const ZodName = z.object({
   contenthash: z.string().optional(),
 })
 
-export const ZodNameWithSignature = ZodName.extend({
+export const ZodNameWithSignature = z.object({
   signature: z.object({
     hash: z.string(),
-    message: z.string(),
+    message: ZodName,
   }),
+  expiration: z.number(),
 })
 
 export type Name = z.infer<typeof ZodName>
