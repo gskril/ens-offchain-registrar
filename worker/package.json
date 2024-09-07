@@ -10,11 +10,11 @@
     "prod:create-tables": "wrangler d1 execute offchaindemo --file=./src/db/create-tables.sql"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20230807.0",
+    "@cloudflare/workers-types": "^4.20240903.0",
     "@types/node": "^18.15.3",
     "prettier": "^2.8.4",
     "typescript": "^4.9.5",
-    "wrangler": "^3.5.0"
+    "wrangler": "^3.75.0"
   },
   "dependencies": {
     "@ensdomains/ccip-read-cf-worker": "^0.0.1",
@@ -25,6 +25,7 @@
     "itty-router": "^4.0.14",
     "kysely": "^0.26.1",
     "kysely-d1": "^0.3.0",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "zod_utilz": "^0.8.3"
   }
 }

@@ -13,7 +13,7 @@ export const ZodName = z.object({
 export const ZodNameWithSignature = z.object({
   signature: z.object({
     hash: z.string(),
-    message: zu.stringToJSON().pipe(ZodName), // stringified version of ZodName
+    message: ZodName,
   }),
   expiration: z.number(),
 })
