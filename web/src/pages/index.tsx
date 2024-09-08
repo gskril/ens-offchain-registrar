@@ -15,6 +15,8 @@ export default function App() {
 
   const [name, setName] = useState<string | undefined>(undefined)
   const [description, setDescription] = useState<string | undefined>(undefined)
+  const [baseAddress, setBaseAddress] = useState<string | undefined>(address)
+  const [arbAddress, setArbAddress] = useState<string | undefined>(address)
 
   const regex = new RegExp('^[a-z0-9-]+$')
   const debouncedName = useDebounce(name, 500)
@@ -25,7 +27,12 @@ export default function App() {
   const nameData: WorkerRequest['signature']['message'] = {
     name: `${debouncedName}.offchaindemo.eth`,
     owner: address!,
-    addresses: { '60': address },
+    // https://docs.ens.domains/web/resolution#multi-chain
+    addresses: {
+      '60': address,
+      '2147492101': baseAddress,
+      '2147525809': arbAddress,
+    },
     texts: { description },
   }
 
@@ -91,6 +98,29 @@ export default function App() {
             placeholder="Your portable web3 profile"
             disabled={!!data || !address}
             onChange={(e) => setDescription(e.target.value)}
+          />
+
+          <Input
+            type="text"
+            label="ETH Address"
+            defaultValue={address}
+            disabled
+          />
+
+          <Input
+            type="text"
+            label="Base Address"
+            defaultValue={address}
+            disabled={!!data || !address}
+            onChange={(e) => setBaseAddress(e.target.value)}
+          />
+
+          <Input
+            type="text"
+            label="Arb Address"
+            defaultValue={address}
+            disabled={!!data || !address}
+            onChange={(e) => setArbAddress(e.target.value)}
           />
 
           <Button
