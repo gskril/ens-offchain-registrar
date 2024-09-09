@@ -695,11 +695,6 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@leichtgewicht/ip-codec@^2.0.1":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
-  integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
-
 "@noble/curves@1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@noble/curves/-/curves-1.4.0.tgz#f05771ef64da724997f69ee1261b2417a49522d6"
@@ -919,13 +914,6 @@ defu@^6.1.4:
   version "6.1.4"
   resolved "https://registry.yarnpkg.com/defu/-/defu-6.1.4.tgz#4e0c9cf9ff68fe5f3d7f2765cc1a012dfdcb0479"
   integrity sha512-mEQCMmwJu317oSz8CwdIOdwf3xMif1ttiM8LTufzc3g6kR+9Pe236twL8j3IYT1F7GfRgGcW6MWxzZjLIkuHIg==
-
-dns-packet@^5.6.1:
-  version "5.6.1"
-  resolved "https://registry.yarnpkg.com/dns-packet/-/dns-packet-5.6.1.tgz#ae888ad425a9d1478a0674256ab866de1012cf2f"
-  integrity sha512-l4gcSouhcgIKRvyy99RNVOgxXiicE+2jZoNmaNmZ6JXiGajBOJAesk1OBlJuM5k2c+eudGdLxDqXuPCKIj6kpw==
-  dependencies:
-    "@leichtgewicht/ip-codec" "^2.0.1"
 
 elliptic@6.5.4:
   version "6.5.4"
