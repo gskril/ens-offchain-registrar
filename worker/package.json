@@ -21,6 +21,7 @@
     "@ensdomains/ens-contracts": "^0.0.22",
     "@ensdomains/offchain-resolver-contracts": "^0.2.1",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
+    "dns-packet": "^5.6.1",
     "ethers": "5.7.2",
     "itty-router": "^4.0.14",
     "kysely": "^0.26.1",
