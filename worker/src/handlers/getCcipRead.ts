@@ -58,7 +58,7 @@ export const getCcipRead = async (request: IRequest, env: Env) => {
 
   const sig = await sign({
     hash: messageHash,
-    privateKey: env.PRIVATE_KEY as Hex,
+    privateKey: env.PRIVATE_KEY,
   })
   const sigData = concat([sig.r, sig.s, toHex(sig.v!)])
 
