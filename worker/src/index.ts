@@ -8,7 +8,9 @@ const router = Router()
 
 router
   .all('*', preflight)
-  .get('/lookup/*', (request, env) => getCcipRead(request, env))
+  .get('/lookup/:sender/:data.json', (request, env) =>
+    getCcipRead(request, env)
+  )
   .get('/get/:name', (request, env) => getName(request, env))
   .get('/names', (request, env) => getNames(env))
   .post('/set', (request, env) => setName(request, env))
