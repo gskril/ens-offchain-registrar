@@ -7,9 +7,18 @@ import { dnsDecodeName, resolverAbi } from './utils'
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const EMPTY_CONTENT_HASH = '0x'
-const TTL = 1000
 
-export function handleQuery(dnsEncodedName: Hex, encodedResolveCall: Hex) {
+type HandleQueryArgs = {
+  dnsEncodedName: Hex
+  encodedResolveCall: Hex
+  env: Env
+}
+
+export async function handleQuery({
+  dnsEncodedName,
+  encodedResolveCall,
+  env,
+}: HandleQueryArgs) {
   const name = dnsDecodeName(dnsEncodedName)
 
   const decodedInternalResolveCall = decodeFunctionData({
@@ -17,21 +26,23 @@ export function handleQuery(dnsEncodedName: Hex, encodedResolveCall: Hex) {
     data: encodedResolveCall,
   })
 
-  let result: string
+  let res: string
+
+  const nameData = await get(name, env)
 
   switch (decodedInternalResolveCall.functionName) {
     case 'addr': {
       const coinType = decodedInternalResolveCall.args[1] ?? 60
-      result = '0x179A862703a4adfb29896552DF9e307980D19285'
+      res = nameData?.addresses?.[coinType.toString()] ?? ZERO_ADDRESS
       break
     }
     case 'text': {
       const key = decodedInternalResolveCall.args[1]
-      result = 'test'
+      res = nameData?.texts?.[key] ?? ''
       break
     }
     case 'contenthash': {
-      result = '0x'
+      res = nameData?.contenthash ?? EMPTY_CONTENT_HASH
       break
     }
     default: {
@@ -43,10 +54,10 @@ export function handleQuery(dnsEncodedName: Hex, encodedResolveCall: Hex) {
 
   return {
     ttl: 1000,
-    encodedResult: encodeFunctionResult({
+    result: encodeFunctionResult({
       abi: resolverAbi,
       functionName: decodedInternalResolveCall.functionName,
-      result,
+      result: res,
     }),
   }
 }

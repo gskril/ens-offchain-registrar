@@ -1,6 +1,7 @@
 name = "ens-gateway"
 main = "src/index.ts"
 compatibility_date = "2023-03-15"
+node_compat = true
 
 [[d1_databases]]
 binding = "DB"

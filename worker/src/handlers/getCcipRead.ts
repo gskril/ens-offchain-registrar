@@ -36,10 +36,11 @@ export const getCcipRead = async (request: IRequest, env: Env) => {
     data: data,
   })
 
-  const { encodedResult: result, ttl } = handleQuery(
-    decodedResolveCall.args[0],
-    decodedResolveCall.args[1] as Hex
-  )
+  const { result, ttl } = await handleQuery({
+    dnsEncodedName: decodedResolveCall.args[0],
+    encodedResolveCall: decodedResolveCall.args[1] as Hex,
+    env,
+  })
   const validUntil = Math.floor(Date.now() / 1000 + ttl)
 
   // Specific to `makeSignatureHash()` in the contract https://etherscan.io/address/0xDB34Da70Cfd694190742E94B7f17769Bc3d84D27#code#F2#L14
