@@ -4,15 +4,16 @@
 
 These choices allow for a scalable namespace with low cost (store up to 1M names for free), low latency, and high availability.
 
-> [!NOTE]  
-> Cloudflare D1 is in open alpha, so there is a possibility of breaking changes. Please [open an issue](https://github.com/gskril/ens-offchain-registrar/issues) if you encounter any issues.
-
 ## API Routes
 
 - `/names` - GET - Returns all names from the database
 - `/get/{name}` - GET - Returns the records for a given name
 - `/lookup/{sender}/{data}.json` - GET - CCIP Read lookup
 - `/set` - POST - Adds a name to the database
+
+## Customizing the Gateway
+
+If you want to use the gateway to serve offchain data that does not come from Cloudflare D1, you can customize [src/handlers/functions/get.ts](./src/handlers/functions/get.ts). Just make sure that it returns data of the same type.
 
 ## Run Locally
 

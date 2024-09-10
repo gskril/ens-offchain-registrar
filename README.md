@@ -2,7 +2,7 @@
 
 This repo builds on top of [ensdomains/offchain-resolver](https://github.com/ensdomains/offchain-resolver) to demonstrate what is effectively an offchain subname registrar for ENS names.
 
-Note: This repo does not include a resolver contract. You can [find that here](https://github.com/ensdomains/offchain-resolver/blob/main/packages/contracts), or use [ccip.tools](https://ccip.tools/) to easily deploy it to Goerli.
+Note: This repo does not include a resolver contract. You can [find that here](https://github.com/ensdomains/offchain-resolver/blob/main/packages/contracts), or use [ccip.tools](https://ccip.tools/) to easily deploy it.
 
 ## [Gateway](worker/README.md)
 
