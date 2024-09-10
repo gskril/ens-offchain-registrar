@@ -1,14 +1,16 @@
 import { IRequest } from 'itty-router'
+import { Hex } from 'viem'
+import { sign } from 'viem/accounts'
 import {
-  Hex,
   concat,
+  decodeFunctionData,
   encodeAbiParameters,
   encodePacked,
+  isAddress,
+  isHex,
   keccak256,
   toHex,
-} from 'viem'
-import { sign } from 'viem/accounts'
-import { decodeFunctionData, isAddress, isHex } from 'viem/utils'
+} from 'viem/utils'
 import { z } from 'zod'
 
 import { handleQuery } from '../ccip-read/query'

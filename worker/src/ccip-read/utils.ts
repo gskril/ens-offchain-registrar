@@ -1,5 +1,5 @@
-import { type ByteArray, bytesToString, toBytes } from 'viem'
-import { parseAbi } from 'viem/utils'
+import { ByteArray } from 'viem'
+import { bytesToString, parseAbi, toBytes } from 'viem/utils'
 
 export const resolverAbi = parseAbi([
   'function resolve(bytes calldata name, bytes calldata data) view returns(bytes memory result, uint64 expires, bytes memory sig)',
