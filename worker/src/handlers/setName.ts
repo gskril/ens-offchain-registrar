@@ -1,5 +1,5 @@
-import { verifyMessage } from 'ethers/lib/utils'
 import { IRequest } from 'itty-router'
+import { verifyMessage } from 'viem'
 
 import { Env } from '../env'
 import { ZodNameWithSignature } from '../models'
@@ -26,12 +26,13 @@ export async function setName(request: IRequest, env: Env): Promise<Response> {
 
   // Validate signature
   try {
-    const signer = verifyMessage(
-      JSON.stringify(signature.message),
-      signature.hash
-    )
+    const isVerified = await verifyMessage({
+      address: owner,
+      message: JSON.stringify(signature.message),
+      signature: signature.hash,
+    })
 
-    if (signer.toLowerCase() !== owner.toLowerCase()) {
+    if (!isVerified) {
       throw new Error('Invalid signer')
     }
   } catch (err) {
