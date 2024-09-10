@@ -18,12 +18,10 @@
   },
   "dependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
-    "ethers": "5.7.2",
     "itty-router": "^4.0.14",
     "kysely": "^0.26.1",
     "kysely-d1": "^0.3.0",
     "viem": "^2.21.3",
-    "zod": "^3.21.4",
-    "zod_utilz": "^0.8.3"
+    "zod": "^3.21.4"
   }
 }
