@@ -21,7 +21,8 @@ export async function handleQuery({
 }: HandleQueryArgs) {
   const name = dnsDecodeName(dnsEncodedName)
 
-  const decodedInternalResolveCall = decodeFunctionData({
+  // Decode the internal resolve call like addr(), text() or contenthash()
+  const { functionName, args } = decodeFunctionData({
     abi: resolverAbi,
     data: encodedResolveCall,
   })
@@ -30,14 +31,14 @@ export async function handleQuery({
 
   const nameData = await get(name, env)
 
-  switch (decodedInternalResolveCall.functionName) {
+  switch (functionName) {
     case 'addr': {
-      const coinType = decodedInternalResolveCall.args[1] ?? 60
+      const coinType = args[1] ?? BigInt(60)
       res = nameData?.addresses?.[coinType.toString()] ?? ZERO_ADDRESS
       break
     }
     case 'text': {
-      const key = decodedInternalResolveCall.args[1]
+      const key = args[1]
       res = nameData?.texts?.[key] ?? ''
       break
     }
@@ -46,9 +47,7 @@ export async function handleQuery({
       break
     }
     default: {
-      throw new Error(
-        `Unsupported query function ${decodedInternalResolveCall.functionName}`
-      )
+      throw new Error(`Unsupported query function ${functionName}`)
     }
   }
 
@@ -56,7 +55,7 @@ export async function handleQuery({
     ttl: 1000,
     result: encodeFunctionResult({
       abi: resolverAbi,
-      functionName: decodedInternalResolveCall.functionName,
+      functionName: functionName,
       result: res,
     }),
   }
