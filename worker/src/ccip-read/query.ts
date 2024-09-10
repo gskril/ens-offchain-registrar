@@ -1,4 +1,4 @@
-import { Hex } from 'viem'
+import { AbiItem, Hex } from 'viem'
 import { decodeFunctionData, encodeFunctionResult } from 'viem/utils'
 
 import { Env } from '../env'
@@ -29,6 +29,11 @@ export async function handleQuery({
 
   let res: string
 
+  // We need to find the correct ABI item for each function, otherwise `addr(node)` and `addr(node, coinType)` causes issues
+  const abiItem: AbiItem | undefined = resolverAbi.find(
+    (abi) => abi.name === functionName && abi.inputs.length === args.length
+  )
+
   const nameData = await get(name, env)
 
   switch (functionName) {
@@ -54,7 +59,7 @@ export async function handleQuery({
   return {
     ttl: 1000,
     result: encodeFunctionResult({
-      abi: resolverAbi,
+      abi: [abiItem],
       functionName: functionName,
       result: res,
     }),
