@@ -1,0 +1,19 @@
+{
+    "name": "resolver",
+    "version": "0.0.0",
+    "private": true,
+    "license": "MIT",
+    "files": ["out"],
+
+    "scripts": {
+        "build": "forge build"
+    },
+    "dependencies": {
+        "@ensdomains/ens-contracts": "^0.0.8",
+        "@openzeppelin/contracts": "^5.0.1"
+    },
+    "publishConfig": {
+      "access": "public"
+    }
+  }
+  
