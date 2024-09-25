@@ -1,4 +1,4 @@
 resolver/out/*
 resolver/cache/*
 resolver/node_modules/*
-
+resolver/lib/*
