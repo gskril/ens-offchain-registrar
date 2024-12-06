@@ -1,4 +1,5 @@
 import {
+  AbiItem,
   type ByteArray,
   type Hex,
   type Prettify,
@@ -152,9 +153,15 @@ export async function encodeEnsOffchainResponse(
   const ttl = 1000
   const validUntil = Math.floor(Date.now() / 1000 + ttl)
 
+  // We need to find the correct ABI item for each function, otherwise `addr(node)` and `addr(node, coinType)` causes issues
+  const abiItem: AbiItem | undefined = RESOLVER_ABI.find(
+    (abi) =>
+      abi.name === query.functionName && abi.inputs.length === query.args.length
+  )
+
   // Encode the resolver function result as it would be returned by the contract
   const functionResult = encodeFunctionResult({
-    abi: RESOLVER_ABI,
+    abi: [abiItem],
     functionName: query.functionName,
     result,
   })
