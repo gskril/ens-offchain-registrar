@@ -28,7 +28,7 @@ export const getCcipRead = async (request: IRequest, env: Env) => {
 
   const ttl = 1000
   const validUntil = Math.floor(Date.now() / 1000 + ttl)
-  const encodedResponse = encodeEnsOffchainResponse(
+  const encodedResponse = await encodeEnsOffchainResponse(
     safeParse.data,
     {
       result,

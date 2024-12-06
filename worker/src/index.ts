@@ -8,7 +8,8 @@ const router = Router()
 
 router
   .all('*', preflight)
-  .get('/lookup/:sender/:data', (req, env) => getCcipRead(req, env))
+  // Note: The `.json` extension is not required by the ERC-3668 spec
+  .get('/lookup/:sender/:data.json', (req, env) => getCcipRead(req, env))
   .get('/get/:name', (req, env) => getName(req, env))
   .get('/names', (_, env) => getNames(env))
   .post('/set', (req, env) => setName(req, env))
