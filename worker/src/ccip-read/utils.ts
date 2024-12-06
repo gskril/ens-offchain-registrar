@@ -34,7 +34,7 @@ type ResolverQueryContentHash = {
   functionName: 'contenthash'
 }
 
-// Equivalent to `DecodeFunctionDataReturnType<typeof RESOLVER_ABI>` but with more clear naming
+// Equivalent to `DecodeFunctionDataReturnType<typeof RESOLVER_ABI>` but with clearer naming
 export type ResolverQuery = Prettify<
   ResolverQueryAddr | ResolverQueryText | ResolverQueryContentHash
 >
