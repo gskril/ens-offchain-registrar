@@ -133,14 +133,6 @@ export function decodeEnsOffchainRequest({
     data: encodedResolveCall,
   })
 
-  // TODO: handle AbiFunctionSignatureNotFoundError coming from `decodeFunctionData` if the resolver call is invalid/unsupported
-  // e.g.:
-  // if (err instanceof AbiFunctionSignatureNotFoundError) {
-  //   throw new InvalidResolverCallError("Unrecognized resolver signature", {
-  //     cause: err,
-  //   });
-  // }
-
   return {
     name,
     query,
@@ -152,12 +144,13 @@ export function decodeEnsOffchainRequest({
  */
 export async function encodeEnsOffchainResponse(
   request: { sender: `0x${string}`; data: `0x${string}` },
-  response: { result: string; validUntil: number },
+  result: string,
   signerPrivateKey: Hex
 ): Promise<Hex> {
   const { sender, data } = request
-  const { result, validUntil } = response
   const { query } = decodeEnsOffchainRequest({ sender, data })
+  const ttl = 1000
+  const validUntil = Math.floor(Date.now() / 1000 + ttl)
 
   // Encode the resolver function result as it would be returned by the contract
   const functionResult = encodeFunctionResult({

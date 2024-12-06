@@ -1,4 +1,5 @@
 import { IRequest } from 'itty-router'
+import { HttpRequestError } from 'viem'
 import { isAddress, isHex } from 'viem/utils'
 import { z } from 'zod'
 
@@ -23,17 +24,20 @@ export const getCcipRead = async (request: IRequest, env: Env) => {
     return Response.json({ error: safeParse.error }, { status: 400 })
   }
 
-  const { name, query } = decodeEnsOffchainRequest(safeParse.data)
-  const result = await getRecord(name, query, env)
+  let result: string
 
-  const ttl = 1000
-  const validUntil = Math.floor(Date.now() / 1000 + ttl)
+  try {
+    const { name, query } = decodeEnsOffchainRequest(safeParse.data)
+    result = await getRecord(name, query, env)
+  } catch (error) {
+    const isHttpRequestError = error instanceof HttpRequestError
+    const errMessage = isHttpRequestError ? error.message : 'Unable to resolve'
+    return Response.json({ message: errMessage }, { status: 400 })
+  }
+
   const encodedResponse = await encodeEnsOffchainResponse(
     safeParse.data,
-    {
-      result,
-      validUntil,
-    },
+    result,
     env.PRIVATE_KEY
   )
 
