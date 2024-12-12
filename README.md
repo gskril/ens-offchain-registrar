@@ -6,7 +6,7 @@ Note: This repo does not include a resolver contract. You can [find that here](h
 
 ## [Gateway](worker/README.md)
 
-[Cloudflare Worker](https://developers.cloudflare.com/workers/) is used as the [CCIP Read](https://eips.ethereum.org/EIPS/eip-3668) gateway. [Cloudflare D1](https://developers.cloudflare.com/d1/) is used to store name data.
+The [CCIP Read](https://eips.ethereum.org/EIPS/eip-3668) gateway runs as a [Cloudflare Worker](https://developers.cloudflare.com/workers/). Name data is stored in [Cloudflare D1](https://developers.cloudflare.com/d1/).
 
 These choices allow for a scalable namespace with low cost (store up to 1M names for free), low latency, and high availability.
 

@@ -13,7 +13,7 @@ These choices allow for a scalable namespace with low cost (store up to 1M names
 
 ## Customizing the Gateway
 
-If you want to use the gateway to serve offchain data that does not come from Cloudflare D1, you can customize [src/handlers/functions/get.ts](./src/handlers/functions/get.ts). Just make sure that it returns data of the same type.
+If you want to use the gateway to serve offchain data that does not come from Cloudflare D1, you can customize [src/ccip-read/query.ts](./src/ccip-read/query.ts).
 
 ## Run Locally
 

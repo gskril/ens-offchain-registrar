@@ -1,45 +1,19 @@
-import { AbiItem, Hex } from 'viem'
-import { decodeFunctionData, encodeFunctionResult } from 'viem/utils'
+import { zeroAddress } from 'viem'
 
 import { Env } from '../env'
 import { get } from '../handlers/functions/get'
-import { dnsDecodeName, resolverAbi } from './utils'
+import { ResolverQuery } from './utils'
 
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
-const EMPTY_CONTENT_HASH = '0x'
-
-type HandleQueryArgs = {
-  dnsEncodedName: Hex
-  encodedResolveCall: Hex
-  env: Env
-}
-
-export async function handleQuery({
-  dnsEncodedName,
-  encodedResolveCall,
-  env,
-}: HandleQueryArgs) {
-  const name = dnsDecodeName(dnsEncodedName)
-
-  // Decode the internal resolve call like addr(), text() or contenthash()
-  const { functionName, args } = decodeFunctionData({
-    abi: resolverAbi,
-    data: encodedResolveCall,
-  })
+export async function getRecord(name: string, query: ResolverQuery, env: Env) {
+  const { functionName, args } = query
 
   let res: string
-
-  // We need to find the correct ABI item for each function, otherwise `addr(node)` and `addr(node, coinType)` causes issues
-  const abiItem: AbiItem | undefined = resolverAbi.find(
-    (abi) => abi.name === functionName && abi.inputs.length === args.length
-  )
-
   const nameData = await get(name, env)
 
   switch (functionName) {
     case 'addr': {
       const coinType = args[1] ?? BigInt(60)
-      res = nameData?.addresses?.[coinType.toString()] ?? ZERO_ADDRESS
+      res = nameData?.addresses?.[coinType.toString()] ?? zeroAddress
       break
     }
     case 'text': {
@@ -48,7 +22,7 @@ export async function handleQuery({
       break
     }
     case 'contenthash': {
-      res = nameData?.contenthash ?? EMPTY_CONTENT_HASH
+      res = nameData?.contenthash ?? '0x'
       break
     }
     default: {
@@ -56,12 +30,5 @@ export async function handleQuery({
     }
   }
 
-  return {
-    ttl: 1000,
-    result: encodeFunctionResult({
-      abi: [abiItem],
-      functionName: functionName,
-      result: res,
-    }),
-  }
+  return res
 }
