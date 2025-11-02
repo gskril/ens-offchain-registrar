@@ -22,7 +22,7 @@ export default function App() {
   const debouncedName = useDebounce(name, 500)
   const enabled = !!debouncedName && regex.test(debouncedName)
 
-  const { data, isLoading, signMessage, variables } = useSignMessage()
+  const { data, isPending, signMessage, variables } = useSignMessage()
 
   const nameData: WorkerRequest['signature']['message'] = {
     name: `${debouncedName}.offchaindemo.eth`,
@@ -126,7 +126,7 @@ export default function App() {
           <Button
             type="submit"
             disabled={!enabled || !!data}
-            loading={isLoading || gatewayIsLoading}
+            loading={isPending || gatewayIsLoading}
           >
             Register
           </Button>
