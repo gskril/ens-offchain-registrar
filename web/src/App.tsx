@@ -12,13 +12,22 @@ const GATEWAY_URL =
   import.meta.env.VITE_GATEWAY_URL ??
   'https://ens-gateway.gregskril.workers.dev'
 
+/**
+ * Drops blank entries so we never sign or submit an empty record. The gateway
+ * requires every address to be a hex string, and clearing a field is how you
+ * say "don't set this record" rather than "set it to an empty value".
+ */
+function omitEmpty(record: Record<string, string | undefined>) {
+  return Object.fromEntries(Object.entries(record).filter(([, value]) => value))
+}
+
 export function App() {
   const { address } = useAccount()
 
   const [name, setName] = useState<string | undefined>(undefined)
   const [description, setDescription] = useState<string | undefined>(undefined)
-  const [baseAddress, setBaseAddress] = useState<string | undefined>(address)
-  const [arbAddress, setArbAddress] = useState<string | undefined>(address)
+  const [baseAddress, setBaseAddress] = useState<string | undefined>(undefined)
+  const [arbAddress, setArbAddress] = useState<string | undefined>(undefined)
 
   const regex = /^[a-z0-9-]+$/
   const debouncedName = useDebounce(name, 500)
@@ -30,12 +39,12 @@ export function App() {
     name: `${debouncedName}.offchaindemo.eth`,
     owner: address!,
     // https://docs.ens.domains/web/resolution#multi-chain
-    addresses: {
+    addresses: omitEmpty({
       '60': address,
-      '2147492101': baseAddress,
-      '2147525809': arbAddress,
-    },
-    texts: { description },
+      '2147492101': baseAddress ?? address,
+      '2147525809': arbAddress ?? address,
+    }),
+    texts: omitEmpty({ description }),
   }
 
   const requestBody: WorkerRequest = {
@@ -102,7 +111,7 @@ export function App() {
           <Input
             type="text"
             label="Base Address"
-            defaultValue={address}
+            value={baseAddress ?? address ?? ''}
             disabled={!!data || !address}
             onChange={(e) => setBaseAddress(e.target.value)}
           />
@@ -110,7 +119,7 @@ export function App() {
           <Input
             type="text"
             label="Arb Address"
-            defaultValue={address}
+            value={arbAddress ?? address ?? ''}
             disabled={!!data || !address}
             onChange={(e) => setArbAddress(e.target.value)}
           />
