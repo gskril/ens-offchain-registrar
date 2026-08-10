@@ -17,6 +17,8 @@ export const wagmiConfig = createConfig({
   chains,
   connectors: [...connectors],
   transports: {
-    [mainnet.id]: http(),
+    // viem's default mainnet RPC is heavily rate limited, so point at a public
+    // node instead of leaving the transport to fall back to it
+    [mainnet.id]: http('https://ethereum-rpc.publicnode.com'),
   },
 })
