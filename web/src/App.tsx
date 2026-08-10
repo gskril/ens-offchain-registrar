@@ -8,8 +8,10 @@ import { useDebounce } from '@/hooks/useDebounce'
 import { useFetch } from '@/hooks/useFetch'
 import type { WorkerRequest } from '@/types'
 
+// `||` not `??`, so a blank value in .env falls back instead of producing a
+// relative URL that would POST to the frontend's own origin
 const GATEWAY_URL =
-  import.meta.env.VITE_GATEWAY_URL ??
+  import.meta.env.VITE_GATEWAY_URL ||
   'https://ens-gateway.gregskril.workers.dev'
 
 /**

@@ -5,8 +5,9 @@ import { mainnet } from 'wagmi/chains'
 const { connectors } = getDefaultWallets({
   appName: 'Offchain ENS Registrar',
   // https://cloud.reown.com
+  // `||` not `??`, so a blank value in .env falls back instead of throwing
   projectId:
-    import.meta.env.VITE_WALLETCONNECT_PROJECT_ID ??
+    import.meta.env.VITE_WALLETCONNECT_PROJECT_ID ||
     'd6c989fb5e87a19a4c3c14412d5a7672',
 })
 
