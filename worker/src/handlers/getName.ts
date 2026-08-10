@@ -1,7 +1,7 @@
 import type { IRequest } from 'itty-router'
 import zod from 'zod'
 
-import { Env } from '../env'
+import type { Env } from '../env'
 import { get } from './functions/get'
 
 export async function getName(request: IRequest, env: Env) {
@@ -11,7 +11,7 @@ export async function getName(request: IRequest, env: Env) {
   const safeParse = schema.safeParse(request.params)
 
   if (!safeParse.success) {
-    const response = { error: safeParse.error }
+    const response = { error: safeParse.error.issues }
     return Response.json(response, { status: 400 })
   }
 

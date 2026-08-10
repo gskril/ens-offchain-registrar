@@ -1,7 +1,7 @@
-import { IRequest } from 'itty-router'
+import type { IRequest } from 'itty-router'
 import { verifyMessage } from 'viem'
 
-import { Env } from '../env'
+import type { Env } from '../env'
 import { ZodNameWithSignature } from '../models'
 import { get } from './functions/get'
 import { set } from './functions/set'
@@ -11,16 +11,23 @@ export async function setName(request: IRequest, env: Env): Promise<Response> {
   const safeParse = ZodNameWithSignature.safeParse(body)
 
   if (!safeParse.success) {
-    const response = { success: false, error: safeParse.error }
+    const response = { success: false, error: safeParse.error.issues }
     return Response.json(response, { status: 400 })
   }
 
-  const { signature, expiration } = safeParse.data
-  const { name, owner } = signature.message
+  const { signature } = safeParse.data
+  const { name, owner, expiration } = signature.message
 
-  // Only allow 3LDs, no nested subdomains
-  if (name.split('.').length !== 3) {
-    const response = { success: false, error: 'Invalid name' }
+  // Only allow direct subnames of the parent, i.e. no nested subdomains
+  const parentName = env.PARENT_NAME || 'offchaindemo.eth'
+  const suffix = `.${parentName}`
+  const label = name.endsWith(suffix) ? name.slice(0, -suffix.length) : ''
+
+  if (!label || label.includes('.')) {
+    const response = {
+      success: false,
+      error: `Name must be a direct subname of ${parentName}`,
+    }
     return Response.json(response, { status: 400 })
   }
 
@@ -37,14 +44,14 @@ export async function setName(request: IRequest, env: Env): Promise<Response> {
     }
   } catch (err) {
     console.error(err)
-    const response = { success: false, error: err }
+    // An Error serializes to `{}`, so send something the client can read
+    const response = { success: false, error: 'Invalid signature' }
     return Response.json(response, { status: 401 })
   }
 
-  // Check the signature expiration
-  const now = Math.floor(Date.now())
-
-  if (expiration < now) {
+  // Check the signature expiration. This is inside the signed message, so it
+  // can't be refreshed by whoever submits the request.
+  if (expiration < Date.now()) {
     const response = { success: false, error: 'Signature expired' }
     return Response.json(response, { status: 401 })
   }

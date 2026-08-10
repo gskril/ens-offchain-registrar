@@ -1,10 +1,10 @@
-import { Router, createCors } from 'itty-router'
+import { cors, type IRequest, Router } from 'itty-router'
 
-import { Env } from './env'
+import type { Env } from './env'
 import { getCcipRead, getName, getNames, setName } from './handlers'
 
-const { preflight, corsify } = createCors()
-const router = Router()
+const { preflight, corsify } = cors()
+const router = Router<IRequest, [Env]>()
 
 router
   .all('*', preflight)
@@ -18,6 +18,8 @@ router
 // Handle requests to the Worker
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
-    return router.handle(request, env).then(corsify)
+    return router
+      .fetch(request, env)
+      .then((response) => corsify(response, request))
   },
 }

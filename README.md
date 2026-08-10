@@ -12,4 +12,4 @@ These choices allow for a scalable namespace with low cost (store up to 1M names
 
 ## [Frontend](web/README.md)
 
-A bare bones Next.js app that allows users to easily register subnames (i.e. POST to the Cloudflare worker's API) by signing a message with their wallet.
+A bare bones [Vite](https://vite.dev/) + React app that allows users to easily register subnames (i.e. POST to the Cloudflare worker's API) by signing a message with their wallet.

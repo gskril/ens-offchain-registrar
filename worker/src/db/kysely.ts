@@ -1,8 +1,8 @@
 import { CamelCasePlugin, Kysely } from 'kysely'
 import { D1Dialect } from 'kysely-d1'
 
-import { Env } from '../env'
-import { NameInKysely } from '../models'
+import type { Env } from '../env'
+import type { NameInKysely } from '../models'
 
 export interface Database {
   names: NameInKysely
