@@ -1,11 +1,12 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
+import { BaseError } from 'viem'
 import { useAccount, useSignMessage } from 'wagmi'
 
 import { Footer } from '@/components/Footer'
 import { Button, Card, Helper, Input, Link } from '@/components/ui'
 import { useDebounce } from '@/hooks/useDebounce'
-import { useFetch } from '@/hooks/useFetch'
 import type { WorkerRequest } from '@/types'
 
 // `||` not `??`, so a blank value in .env falls back instead of producing a
@@ -13,6 +14,10 @@ import type { WorkerRequest } from '@/types'
 const GATEWAY_URL =
   import.meta.env.VITE_GATEWAY_URL ||
   'https://ens-gateway.gregskril.workers.dev'
+
+// Must match PARENT_NAME in the Worker's wrangler.toml, which only accepts
+// writes for direct subnames of it
+const PARENT_NAME = import.meta.env.VITE_PARENT_NAME || 'offchaindemo.eth'
 
 /**
  * Drops blank entries so we never sign or submit an empty record. The gateway
@@ -25,6 +30,7 @@ function omitEmpty(record: Record<string, string | undefined>) {
 
 export function App() {
   const { address } = useAccount()
+  const { signMessageAsync } = useSignMessage()
 
   const [name, setName] = useState<string | undefined>(undefined)
   const [description, setDescription] = useState<string | undefined>(undefined)
@@ -35,39 +41,50 @@ export function App() {
   const debouncedName = useDebounce(name, 500)
   const enabled = !!debouncedName && regex.test(debouncedName)
 
-  const { data, isPending, signMessage } = useSignMessage()
+  const register = useMutation({
+    mutationFn: async () => {
+      if (!address) throw new Error('Wallet not connected')
 
-  const nameData: WorkerRequest['signature']['message'] = {
-    name: `${debouncedName}.offchaindemo.eth`,
-    owner: address!,
-    // https://docs.ens.domains/web/resolution#multi-chain
-    addresses: omitEmpty({
-      '60': address,
-      '2147492101': baseAddress ?? address,
-      '2147525809': arbAddress ?? address,
-    }),
-    texts: omitEmpty({ description }),
-  }
+      // Built once, here, so the message that gets signed is byte for byte the
+      // message that gets sent. `expiration` is covered by the signature, so a
+      // rebuilt message would no longer match the hash.
+      const message: WorkerRequest['signature']['message'] = {
+        name: `${debouncedName}.${PARENT_NAME}`,
+        owner: address,
+        // https://docs.ens.domains/web/resolution#multi-chain
+        addresses: omitEmpty({
+          '60': address,
+          '2147492101': baseAddress ?? address,
+          '2147525809': arbAddress ?? address,
+        }),
+        texts: omitEmpty({ description }),
+        expiration: Date.now() + 60 * 60 * 1000, // 1 hour
+      }
 
-  const requestBody: WorkerRequest = {
-    signature: {
-      hash: data!,
-      message: nameData,
+      const hash = await signMessageAsync({ message: JSON.stringify(message) })
+
+      const response = await fetch(`${GATEWAY_URL}/set`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          signature: { hash, message },
+        } satisfies WorkerRequest),
+      })
+
+      // `statusText` is empty over HTTP/2, so branch on the status code
+      if (response.status === 409) {
+        throw new Error('Somebody already registered that name')
+      }
+
+      if (!response.ok) {
+        throw new Error('Something went wrong')
+      }
+
+      return response.json()
     },
-    expiration: Date.now() + 60 * 60 * 1000, // 1 hour
-  }
-
-  const {
-    data: gatewayData,
-    error: gatewayError,
-    isLoading: gatewayIsLoading,
-  } = useFetch(data && `${GATEWAY_URL}/set`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(requestBody),
   })
+
+  const locked = register.isPending || register.isSuccess
 
   return (
     <>
@@ -79,18 +96,18 @@ export function App() {
 
         <form
           className="flex w-full flex-col gap-4"
-          onSubmit={(e) => {
-            e.preventDefault()
-            signMessage({ message: JSON.stringify(nameData) })
+          onSubmit={(event) => {
+            event.preventDefault()
+            register.mutate()
           }}
         >
           <Input
             type="text"
             label="Name"
-            suffix=".offchaindemo.eth"
+            suffix={`.${PARENT_NAME}`}
             placeholder="ens"
             required
-            disabled={!!data || !address}
+            disabled={locked || !address}
             onChange={(e) => setName(e.target.value)}
           />
 
@@ -98,7 +115,7 @@ export function App() {
             type="text"
             label="Description"
             placeholder="Your portable web3 profile"
-            disabled={!!data || !address}
+            disabled={locked || !address}
             onChange={(e) => setDescription(e.target.value)}
           />
 
@@ -114,7 +131,7 @@ export function App() {
             type="text"
             label="Base Address"
             value={baseAddress ?? address ?? ''}
-            disabled={!!data || !address}
+            disabled={locked || !address}
             onChange={(e) => setBaseAddress(e.target.value)}
           />
 
@@ -122,30 +139,31 @@ export function App() {
             type="text"
             label="Arb Address"
             value={arbAddress ?? address ?? ''}
-            disabled={!!data || !address}
+            disabled={locked || !address}
             onChange={(e) => setArbAddress(e.target.value)}
           />
 
           <Button
             type="submit"
-            disabled={!enabled || !!data}
-            loading={isPending || gatewayIsLoading}
+            disabled={!enabled || locked}
+            loading={register.isPending}
           >
             Register
           </Button>
         </form>
 
-        {gatewayError ? (
+        {register.error ? (
           <Helper type="error">
-            {gatewayError.message === 'Conflict'
-              ? 'Somebody already registered that name'
-              : 'Something went wrong'}
+            {/* viem errors stringify to a multi-line blob, so prefer the short form */}
+            {register.error instanceof BaseError
+              ? register.error.shortMessage
+              : register.error.message}
           </Helper>
-        ) : gatewayData ? (
+        ) : register.isSuccess ? (
           <Helper>
             <p>
               Visit the{' '}
-              <Link href={`https://ens.app/${debouncedName}.offchaindemo.eth`}>
+              <Link href={`https://ens.app/${debouncedName}.${PARENT_NAME}`}>
                 ENS Manager
               </Link>{' '}
               to see your name

@@ -5,6 +5,11 @@ compatibility_date = "2026-08-10"
 [observability]
 enabled = true
 
+[vars]
+# Writes are restricted to direct subnames of this. Reads are not restricted,
+# so the gateway can still serve any name whose resolver points at it.
+PARENT_NAME = "offchaindemo.eth"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "offchaindemo"
