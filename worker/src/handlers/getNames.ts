@@ -1,5 +1,5 @@
 import { createKysely } from '../db/kysely'
-import { Env } from '../env'
+import type { Env } from '../env'
 import { parseNameFromDb } from './functions/utils'
 
 export async function getNames(env: Env) {
@@ -8,16 +8,16 @@ export async function getNames(env: Env) {
   const parsedNames = parseNameFromDb(names)
 
   // Simplify the response format
-  const formattedNames = parsedNames.reduce((acc, name) => {
-    return {
-      ...acc,
-      [name.name]: {
+  const formattedNames = Object.fromEntries(
+    parsedNames.map((name) => [
+      name.name,
+      {
         addresses: name.addresses,
         texts: name.texts,
         contenthash: name.contenthash,
       },
-    }
-  }, {})
+    ])
+  )
 
   return Response.json(formattedNames, {
     status: 200,

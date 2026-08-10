@@ -1,7 +1,7 @@
-import { IRequest } from 'itty-router'
+import type { IRequest } from 'itty-router'
 import { verifyMessage } from 'viem'
 
-import { Env } from '../env'
+import type { Env } from '../env'
 import { ZodNameWithSignature } from '../models'
 import { get } from './functions/get'
 import { set } from './functions/set'
@@ -11,7 +11,7 @@ export async function setName(request: IRequest, env: Env): Promise<Response> {
   const safeParse = ZodNameWithSignature.safeParse(body)
 
   if (!safeParse.success) {
-    const response = { success: false, error: safeParse.error }
+    const response = { success: false, error: safeParse.error.issues }
     return Response.json(response, { status: 400 })
   }
 

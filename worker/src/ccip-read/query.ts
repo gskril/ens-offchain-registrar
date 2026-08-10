@@ -1,8 +1,8 @@
 import { zeroAddress } from 'viem'
 
-import { Env } from '../env'
+import type { Env } from '../env'
 import { get } from '../handlers/functions/get'
-import { ResolverQuery } from './utils'
+import type { ResolverQuery } from './utils'
 
 export async function getRecord(name: string, query: ResolverQuery, env: Env) {
   const { functionName, args } = query

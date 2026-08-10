@@ -1,16 +1,18 @@
-import { Button, Input } from '@ensdomains/thorin'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-import Head from 'next/head'
 import { useState } from 'react'
 import { useAccount, useSignMessage } from 'wagmi'
 
 import { Footer } from '@/components/Footer'
+import { Button, Card, Helper, Input, Link } from '@/components/ui'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useFetch } from '@/hooks/useFetch'
-import { Card, Form, Helper, Link, Spacer } from '@/styles'
-import { WorkerRequest } from '@/types'
+import type { WorkerRequest } from '@/types'
 
-export default function App() {
+const GATEWAY_URL =
+  import.meta.env.VITE_GATEWAY_URL ??
+  'https://ens-gateway.gregskril.workers.dev'
+
+export function App() {
   const { address } = useAccount()
 
   const [name, setName] = useState<string | undefined>(undefined)
@@ -18,11 +20,11 @@ export default function App() {
   const [baseAddress, setBaseAddress] = useState<string | undefined>(address)
   const [arbAddress, setArbAddress] = useState<string | undefined>(address)
 
-  const regex = new RegExp('^[a-z0-9-]+$')
+  const regex = /^[a-z0-9-]+$/
   const debouncedName = useDebounce(name, 500)
   const enabled = !!debouncedName && regex.test(debouncedName)
 
-  const { data, isPending, signMessage, variables } = useSignMessage()
+  const { data, isPending, signMessage } = useSignMessage()
 
   const nameData: WorkerRequest['signature']['message'] = {
     name: `${debouncedName}.offchaindemo.eth`,
@@ -41,14 +43,14 @@ export default function App() {
       hash: data!,
       message: nameData,
     },
-    expiration: new Date().getTime() + 60 * 60, // 1 hour
+    expiration: Date.now() + 60 * 60 * 1000, // 1 hour
   }
 
   const {
     data: gatewayData,
     error: gatewayError,
     isLoading: gatewayIsLoading,
-  } = useFetch(data && 'https://ens-gateway.gregskril.workers.dev/set', {
+  } = useFetch(data && `${GATEWAY_URL}/set`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -58,25 +60,14 @@ export default function App() {
 
   return (
     <>
-      <Head>
-        <title>Offchain ENS Registrar</title>
-        <meta property="og:title" content="Offchain ENS Registrar" />
-        <meta
-          name="description"
-          content="Quick demo of how offchain ENS names work"
-        />
-        <meta
-          property="og:description"
-          content="Quick demo of how offchain ENS names work"
-        />
-      </Head>
-
-      <Spacer />
+      {/* Balances the footer so the card sits in the middle of the page */}
+      <div aria-hidden />
 
       <Card>
         <ConnectButton showBalance={false} />
 
-        <Form
+        <form
+          className="flex w-full flex-col gap-4"
           onSubmit={(e) => {
             e.preventDefault()
             signMessage({ message: JSON.stringify(nameData) })
@@ -103,8 +94,9 @@ export default function App() {
           <Input
             type="text"
             label="ETH Address"
-            defaultValue={address}
+            value={address ?? ''}
             disabled
+            readOnly
           />
 
           <Input
@@ -130,7 +122,7 @@ export default function App() {
           >
             Register
           </Button>
-        </Form>
+        </form>
 
         {gatewayError ? (
           <Helper type="error">
@@ -148,7 +140,7 @@ export default function App() {
               to see your name
             </p>
           </Helper>
-        ) : !!debouncedName && !enabled ? (
+        ) : debouncedName && !enabled ? (
           <Helper type="error">Name must be lowercase alphanumeric</Helper>
         ) : null}
       </Card>

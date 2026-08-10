@@ -46,6 +46,7 @@ export function useFetch<T = unknown>(
 
   const [state, dispatch] = useReducer(fetchReducer, initialState)
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `options` is a new object on every render, so depending on it would refetch in a loop
   useEffect(() => {
     // Do nothing if the url is not given
     if (!url) return
@@ -86,7 +87,6 @@ export function useFetch<T = unknown>(
     return () => {
       cancelRequest.current = true
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url])
 
   return state

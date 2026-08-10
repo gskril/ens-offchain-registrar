@@ -7,21 +7,23 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "dev:create-tables": "wrangler d1 execute offchaindemo --local --file=./src/db/create-tables.sql",
-    "prod:create-tables": "wrangler d1 execute offchaindemo --file=./src/db/create-tables.sql"
+    "prod:create-tables": "wrangler d1 execute offchaindemo --file=./src/db/create-tables.sql",
+    "typecheck": "tsc --noEmit",
+    "format": "biome format --write .",
+    "lint": "biome lint .",
+    "check": "biome check ."
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240903.0",
-    "@types/node": "^18.15.3",
-    "prettier": "^2.8.4",
-    "typescript": "^4.9.5",
-    "wrangler": "^3.75.0"
+    "@biomejs/biome": "^2.5.7",
+    "@cloudflare/workers-types": "^5.20260810.1",
+    "typescript": "^7.0.2",
+    "wrangler": "^4.120.1"
   },
   "dependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
-    "itty-router": "^4.0.14",
-    "kysely": "^0.26.1",
-    "kysely-d1": "^0.3.0",
-    "viem": "^2.38.5",
-    "zod": "^3.21.4"
+    "itty-router": "^5.0.24",
+    "kysely": "^0.29.5",
+    "kysely-d1": "^0.4.0",
+    "viem": "^2.55.13",
+    "zod": "^4.4.3"
   }
 }

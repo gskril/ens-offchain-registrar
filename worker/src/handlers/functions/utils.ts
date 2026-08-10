@@ -1,6 +1,6 @@
-import { Insertable, Selectable } from 'kysely'
+import type { Insertable, Selectable } from 'kysely'
 
-import { Name, NameInKysely } from '../../models'
+import type { Name, NameInKysely } from '../../models'
 
 type SelectableKysely = Selectable<NameInKysely>
 type InsertableKysely = Insertable<NameInKysely>
@@ -23,10 +23,12 @@ export function parseNameFromDb(
   function parseName(name: SelectableKysely) {
     return {
       name: name.name,
-      owner: name.owner,
+      // The database stores these as plain strings, but they were validated
+      // against `ZodName` before being written
+      owner: name.owner as Name['owner'],
       addresses: name.addresses ? JSON.parse(name.addresses) : undefined,
       texts: name.texts ? JSON.parse(name.texts) : undefined,
-      contenthash: name.contenthash || undefined,
+      contenthash: (name.contenthash || undefined) as Name['contenthash'],
       createdAt: name.createdAt,
       updatedAt: name.updatedAt,
     }

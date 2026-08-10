@@ -1,4 +1,4 @@
-import { IRequest } from 'itty-router'
+import type { IRequest } from 'itty-router'
 import { HttpRequestError } from 'viem'
 import { isAddress, isHex } from 'viem/utils'
 import { z } from 'zod'
@@ -8,7 +8,7 @@ import {
   decodeEnsOffchainRequest,
   encodeEnsOffchainResponse,
 } from '../ccip-read/utils'
-import { Env } from '../env'
+import type { Env } from '../env'
 
 const schema = z.object({
   sender: z.string().refine((data) => isAddress(data)),
@@ -21,7 +21,7 @@ export const getCcipRead = async (request: IRequest, env: Env) => {
   const safeParse = schema.safeParse(request.params)
 
   if (!safeParse.success) {
-    return Response.json({ error: safeParse.error }, { status: 400 })
+    return Response.json({ error: safeParse.error.issues }, { status: 400 })
   }
 
   let result: string

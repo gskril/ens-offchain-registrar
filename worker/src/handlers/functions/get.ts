@@ -1,6 +1,6 @@
 import { createKysely } from '../../db/kysely'
-import { Env } from '../../env'
-import { Name } from '../../models'
+import type { Env } from '../../env'
+import type { Name } from '../../models'
 import { parseNameFromDb } from './utils'
 
 export async function get(name: string, env: Env): Promise<Name | null> {

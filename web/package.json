@@ -1,39 +1,39 @@
 {
   "name": "web",
   "version": "1.0.0",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "clean": "rm -rf node_modules .next",
-    "prettier:check": "prettier --check src/**/*",
-    "prettier:fix": "prettier --write src/**/*"
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "format": "biome format --write .",
+    "lint": "biome lint .",
+    "check": "biome check ."
   },
   "dependencies": {
-    "@ensdomains/thorin": "^0.6.39",
-    "@rainbow-me/rainbowkit": "^2.2.9",
-    "@tanstack/react-query": "^5.90.5",
-    "next": "13.4.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-is": "^18.2.0",
-    "react-transition-state": "^2.1.0",
-    "styled-components": "^6.0.0-rc.1",
-    "viem": "^2.38.5",
-    "wagmi": "^2.19.1"
+    "@rainbow-me/rainbowkit": "^2.2.11",
+    "@tanstack/react-query": "^5.101.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "viem": "^2.55.13",
+    "wagmi": "^2.19.5"
   },
   "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^4.1.1",
-    "@types/node": "^20.1.1",
-    "@types/react": "^18.2.6",
-    "@types/react-dom": "^18.2.4",
-    "@types/styled-components": "^5.1.26",
-    "eslint": "^8.40.0",
-    "eslint-config-next": "^13.4.1",
-    "eslint-config-prettier": "^8.8.0",
-    "prettier": "^2.8.8",
-    "sass": "^1.62.1",
-    "typescript": "^5.0.4"
+    "@biomejs/biome": "^2.5.7",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^26.2.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.0.5",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.1"
+  },
+  "overrides": {
+    "ws": "^8.21.3",
+    "axios": "^1.19.0",
+    "uuid": "^11.1.1"
   }
 }

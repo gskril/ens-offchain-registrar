@@ -1,5 +1,5 @@
 import {
-  AbiItem,
+  type AbiItem,
   type ByteArray,
   type Hex,
   type Prettify,
